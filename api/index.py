@@ -42,17 +42,46 @@ async def generate_plot(request: PlotRequest):
     from engine.plotter import process_plot
     return process_plot(request.equation)
 
+@app.post("/api/scan-image")
+async def scan_image(file: UploadFile = File(...)):
+    from engine.scanner import scanner
+    
+    # Save uploaded file to a temporary location
+    with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(file.filename)[1]) as tmp:
+        shutil.copyfileobj(file.file, tmp)
+        tmp_path = tmp.name
+
+    try:
+        text = scanner.scan_image(tmp_path)
+        if text.startswith("[Error"):
+            return {"success": False, "error": text}
+            
+        questions = scanner.extract_questions(text)
+        return {
+            "success": True,
+            "text": text,
+            "questions": questions,
+            "is_paper": len(questions) > 1
+        }
+    finally:
+        if os.path.exists(tmp_path):
+            os.remove(tmp_path)
+
 @app.get("/api/formulas")
 async def get_formulas():
     import json
-    file_path = os.path.join(os.getcwd(), "data", "formulas.json")
+    # Use BASE_DIR for finding data
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    file_path = os.path.join(base_dir, "data", "formulas.json")
     try:
-        with open(file_path, "r") as f:
-            return json.load(f)
-    except FileNotFoundError:
+        if os.path.exists(file_path):
+            with open(file_path, "r") as f:
+                return json.load(f)
+        return {"categories": []}
+    except Exception:
         return {"categories": []}
 
 @app.get("/")
 @app.get("/api")
 def read_root():
-    return {"status": "ok", "message": "STEM Engine API running on Vercel"}
+    return {"status": "ok", "message": "STEM Engine API running on Vercel v2"}

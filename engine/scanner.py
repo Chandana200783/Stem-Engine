@@ -11,8 +11,9 @@ except ImportError:
 
 class Scanner:
     def __init__(self):
-        # Configure tesseract path if needed
-        pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+        # Only set hardcoded path if on Windows local
+        if os.name == 'nt' and os.path.exists(r'C:\Program Files\Tesseract-OCR\tesseract.exe'):
+            pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
     def scan_image(self, image_path: str) -> str:
         """
@@ -23,11 +24,13 @@ class Scanner:
             return "[Error: OCR libraries (pytesseract, Pillow) not installed on server.]"
         
         try:
+            # Check if tesseract is in PATH (standard for Linux/Vercel if installed via packages)
+            # Note: Vercel standard environment doesn't have tesseract
             text = pytesseract.image_to_string(Image.open(image_path))
             return text
-        except FileNotFoundError:
-            return "[Error: Tesseract-OCR executable not found. Please ensure it is installed.]"
         except Exception as e:
+            if "tesseract is not installed" in str(e).lower() or "no such file" in str(e).lower():
+                return "[Error: Tesseract OCR is not available in this environment (Vercel). Please type your problem manually or use the Dictate feature.]"
             return f"[Error scanning image: {str(e)}]"
 
     def extract_questions(self, text: str) -> List[str]:
