@@ -8,5 +8,3 @@ axios
 uvicorn
 jinja2
 markupsafe
-pytesseract
-Pillow
