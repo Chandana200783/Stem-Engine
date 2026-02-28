@@ -1,6 +1,6 @@
 import { SolveResult } from '../types';
 
-const API_URL = import.meta.env.VITE_AI_URL || 'http://localhost:5000/ai';
+const API_URL = 'http://localhost:5000/ai';
 
 export const solveWithAI = async (
     problem: string,
