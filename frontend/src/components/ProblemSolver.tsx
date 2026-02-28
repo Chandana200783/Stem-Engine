@@ -404,9 +404,9 @@ export const ProblemSolver: React.FC<ProblemSolverProps> = ({ onAddPyq, language
                         <button
                             key={s.id}
                             onClick={() => setSubject(s.id)}
-                            className={`flex items-center space-x-2 px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 border ${isActive
-                                ? 'bg-blue-600/20 border-blue-500/50 text-white'
-                                : 'bg-brand-surface border-brand-muted/15 text-brand-muted hover:text-white hover:border-brand-muted/40'
+                            className={`flex items-center space-x-2 px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 ${isActive
+                                ? 'bg-blue-600/20 text-white shadow-sm'
+                                : 'bg-brand-surface text-brand-muted hover:text-white'
                                 }`}
                         >
                             <Icon className={`w-4 h-4 ${isActive ? 'text-blue-400' : 'text-brand-muted'}`} />
@@ -421,9 +421,9 @@ export const ProblemSolver: React.FC<ProblemSolverProps> = ({ onAddPyq, language
                 <h3 className="text-xs font-bold text-brand-muted uppercase tracking-widest">Enter Your Problem</h3>
                 <button
                     onClick={() => setHintMode(!hintMode)}
-                    className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors border ${hintMode
-                        ? 'bg-yellow-900/20 border-yellow-500/30 text-yellow-400'
-                        : 'bg-brand-surface border-brand-muted/20 text-brand-muted hover:text-white'
+                    className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${hintMode
+                        ? 'bg-yellow-900/20 text-yellow-400 shadow-sm'
+                        : 'bg-brand-surface text-brand-muted hover:text-white'
                         }`}
                 >
                     <Lightbulb className="w-3.5 h-3.5" />
@@ -432,16 +432,16 @@ export const ProblemSolver: React.FC<ProblemSolverProps> = ({ onAddPyq, language
                 <div className="flex items-center space-x-2">
                     <button
                         onClick={() => setShowCheatSheet(true)}
-                        className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all bg-emerald-600/20 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-600/30"
+                        className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600/30 shadow-sm"
                     >
                         <FileText className="w-3.5 h-3.5" />
                         <span>Cheat Sheet</span>
                     </button>
                     <button
                         onClick={toggleListening}
-                        className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all border ${isListening
-                            ? 'bg-red-900/40 border-red-500/50 text-red-400 animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.3)]'
-                            : 'bg-brand-surface border-brand-muted/20 text-brand-muted hover:text-white'
+                        className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${isListening
+                            ? 'bg-red-900/40 text-red-400 animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.3)]'
+                            : 'bg-brand-surface text-brand-muted hover:text-white'
                             }`}
                     >
                         {isListening ? <Mic className="w-3.5 h-3.5" /> : <MicOff className="w-3.5 h-3.5" />}
@@ -449,9 +449,9 @@ export const ProblemSolver: React.FC<ProblemSolverProps> = ({ onAddPyq, language
                     </button>
                     <button
                         onClick={() => setShowCalculator(!showCalculator)}
-                        className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors border ${showCalculator
-                            ? 'bg-blue-600/20 border-blue-500/30 text-blue-400'
-                            : 'bg-brand-surface border-brand-muted/20 text-brand-muted hover:text-white'
+                        className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${showCalculator
+                            ? 'bg-blue-600/20 text-blue-400 shadow-sm'
+                            : 'bg-brand-surface text-brand-muted hover:text-white'
                             }`}
                     >
                         <Calculator className="w-3.5 h-3.5" />
@@ -466,12 +466,12 @@ export const ProblemSolver: React.FC<ProblemSolverProps> = ({ onAddPyq, language
                     value={problemText}
                     onChange={e => setProblemText(e.target.value)}
                     placeholder={t.solver.placeholder}
-                    className="w-full h-44 bg-[#0b1121] border border-brand-muted/20 rounded-2xl p-6 text-white placeholder-brand-muted/40 focus:outline-none focus:ring-1 focus:ring-brand-accent transition-all text-sm resize-none custom-scrollbar group-hover:border-brand-muted/30"
+                    className="w-full h-44 bg-[#0b1121] rounded-2xl p-6 text-white placeholder-brand-muted/40 focus:outline-none focus:ring-1 focus:ring-brand-accent transition-all text-sm resize-none custom-scrollbar shadow-inner"
                 />
             </form>
 
             {scanError && (
-                <div className="mb-4 p-3 bg-red-900/20 border border-red-500/30 rounded-xl text-red-400 text-xs flex items-center space-x-2 animate-in fade-in slide-in-from-top-2">
+                <div className="mb-4 p-3 bg-red-900/20 rounded-xl text-red-400 text-xs flex items-center space-x-2 animate-in fade-in slide-in-from-top-2 shadow-sm">
                     <X className="w-3.5 h-3.5 cursor-pointer" onClick={() => setScanError(null)} />
                     <span>{scanError}</span>
                 </div>
@@ -498,7 +498,7 @@ export const ProblemSolver: React.FC<ProblemSolverProps> = ({ onAddPyq, language
                     </h3>
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                         {detectedVars.map(v => (
-                            <div key={v} className={`relative group p-3 rounded-xl border transition-all ${solveFor === v ? 'bg-blue-600/10 border-blue-500/40' : 'bg-brand-surface border-brand-muted/15 hover:border-brand-muted/30'}`}>
+                            <div key={v} className={`relative group p-3 rounded-xl transition-all shadow-sm ${solveFor === v ? 'bg-blue-600/10 ring-1 ring-blue-500/30' : 'bg-brand-surface'}`}>
                                 <div className="flex justify-between items-center mb-2">
                                     <label className="text-xs font-bold text-brand-muted uppercase tracking-wider">{v}</label>
                                     <button
@@ -515,7 +515,7 @@ export const ProblemSolver: React.FC<ProblemSolverProps> = ({ onAddPyq, language
                                     placeholder={solveFor === v ? 'Unknown' : 'Value'}
                                     disabled={solveFor === v}
                                     onChange={e => setVarValues(prev => ({ ...prev, [v]: e.target.value }))}
-                                    className={`w-full bg-[#0b1121] border border-brand-muted/20 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:ring-1 focus:ring-blue-500/50 placeholder-brand-muted/30 ${solveFor === v ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                    className={`w-full bg-[#0b1121] rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:ring-1 focus:ring-blue-500/50 placeholder-brand-muted/30 shadow-inner ${solveFor === v ? 'opacity-50 cursor-not-allowed' : ''}`}
                                 />
                             </div>
                         ))}
@@ -530,7 +530,7 @@ export const ProblemSolver: React.FC<ProblemSolverProps> = ({ onAddPyq, language
                     <button
                         key={i}
                         onClick={() => setProblemText(ex.val)}
-                        className="px-3 py-1.5 bg-[#0f172a] hover:bg-[#1e293b] border border-brand-muted/10 rounded-lg text-xs text-brand-muted hover:text-white transition-colors"
+                        className="px-3 py-1.5 bg-[#0f172a] hover:bg-[#1e293b] rounded-lg text-xs text-brand-muted hover:text-white transition-colors shadow-sm"
                     >
                         {ex.label}
                     </button>
