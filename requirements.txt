@@ -1,0 +1,10 @@
+fastapi
+pydantic
+sympy
+numpy
+python-multipart
+python-dotenv
+axios
+uvicorn
+jinja2
+markupsafe
