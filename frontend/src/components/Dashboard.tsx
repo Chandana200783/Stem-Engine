@@ -8,7 +8,7 @@ export const Dashboard: React.FC<{ onNavigate?: (tab: string) => void; language:
     return (
         <div className="flex flex-col space-y-6 animate-in fade-in duration-500">
             {/* Hero Section */}
-            <div className="bg-gradient-to-br from-brand-surface/80 to-brand-dark border border-brand-muted/20 p-8 rounded-2xl relative overflow-hidden">
+            <div className="bg-gradient-to-br from-brand-surface/80 to-brand-dark p-8 rounded-2xl relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-64 h-64 bg-brand-accent/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
                 <div className="relative z-10 max-w-2xl">
                     <h2 className="text-3xl font-bold text-white mb-3">{t.dashboard.welcome}</h2>
@@ -55,7 +55,7 @@ export const Dashboard: React.FC<{ onNavigate?: (tab: string) => void; language:
             </div>
 
             {/* Level & Progress */}
-            <div className="bg-[#0f172a] border border-brand-muted/10 p-6 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-8">
+            <div className="bg-[#0f172a] p-6 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-8 shadow-sm">
                 <div className="flex-1 space-y-3">
                     <div className="flex justify-between items-end">
                         <div className="flex items-center space-x-3">
@@ -123,7 +123,7 @@ export const Dashboard: React.FC<{ onNavigate?: (tab: string) => void; language:
 
 // Sub-components
 const StatCard = ({ icon, value, label, subLabel, bgClass }: any) => (
-    <div className={`${bgClass} border border-brand-muted/10 p-5 rounded-xl flex flex-col space-y-3 hover:border-brand-muted/30 transition-colors`}>
+    <div className={`${bgClass} p-5 rounded-xl flex flex-col space-y-3 hover:bg-brand-surface/80 transition-all shadow-sm`}>
         <div className="bg-brand-surface/50 w-10 h-10 rounded-lg flex items-center justify-center border border-brand-muted/10 shadow-sm">
             {icon}
         </div>
@@ -178,7 +178,7 @@ const CircularProgress = ({ percentage, label, subtitle, color, icon }: any) => 
 };
 
 const ActionCard = ({ icon, title, subtitle, onClick }: any) => (
-    <div onClick={onClick} className="bg-[#0f172a] hover:bg-brand-surface/60 border border-brand-muted/10 hover:border-brand-muted/30 p-4 rounded-xl flex items-center justify-between cursor-pointer transition-all group active:scale-[0.98]">
+    <div onClick={onClick} className="bg-[#0f172a] hover:bg-brand-surface/60 p-4 rounded-xl flex items-center justify-between cursor-pointer transition-all group active:scale-[0.98] shadow-sm">
         <div className="flex items-center space-x-4">
             <div className="bg-brand-surface w-10 h-10 rounded-lg flex items-center justify-center text-brand-accent group-hover:text-blue-400 group-hover:bg-brand-accent/10 transition-colors">
                 {icon}
@@ -202,7 +202,7 @@ const ActivityCard = ({ title, category, time, xp, type }: any) => {
     };
 
     return (
-        <div className="bg-[#0f172a] border border-brand-muted/10 p-4 rounded-xl flex items-center justify-between">
+        <div className="bg-[#0f172a] p-4 rounded-xl flex items-center justify-between shadow-sm">
             <div className="flex items-center space-x-4">
                 <div className="bg-brand-surface w-10 h-10 rounded-lg flex items-center justify-center text-blue-400">
                     {getIcon()}

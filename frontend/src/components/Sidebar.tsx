@@ -45,9 +45,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, pyqs 
     ];
 
     return (
-        <div className="w-64 bg-[#0b1121] h-screen border-r border-brand-muted/10 flex flex-col hidden md:flex">
+        <div className="w-64 bg-[#0b1121] h-screen flex flex-col hidden md:flex shadow-2xl z-20">
             {/* Logo */}
-            <div className="p-6 flex items-center space-x-3 mb-4 border-b border-brand-muted/10">
+            <div className="p-6 flex items-center space-x-3 mb-4">
                 <div className="bg-brand-accent/20 p-2 rounded-lg">
                     <Atom className="text-brand-accent w-6 h-6" />
                 </div>
@@ -67,7 +67,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, pyqs 
                             key={item.id}
                             onClick={() => setActiveTab(item.id)}
                             className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group ${isActive
-                                ? 'bg-brand-accent/10 border border-brand-accent/20 text-brand-accent font-medium shadow-[inset_0_1px_0_0_rgba(148,163,184,0.1)]'
+                                ? 'bg-brand-accent/10 text-brand-accent font-medium shadow-[inset_0_1px_0_0_rgba(148,163,184,0.1)]'
                                 : 'text-brand-muted hover:bg-brand-surface/50 hover:text-brand-text'
                                 }`}
                         >
@@ -94,7 +94,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, pyqs 
             </nav>
 
             {/* Bottom: Settings + version */}
-            <div className="px-4 pb-4 border-t border-brand-muted/10 pt-3 space-y-1">
+            <div className="px-4 pb-4 pt-3 space-y-1">
                 {bottomItems.map((item) => {
                     const Icon = item.icon;
                     const isActive = activeTab === item.id;
@@ -103,7 +103,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, pyqs 
                             key={item.id}
                             onClick={() => setActiveTab(item.id)}
                             className={`w-full flex items-center space-x-3 px-4 py-2.5 rounded-xl transition-all duration-200 group text-sm ${isActive
-                                ? 'bg-brand-accent/10 border border-brand-accent/20 text-brand-accent font-medium'
+                                ? 'bg-brand-accent/10 text-brand-accent font-medium'
                                 : 'text-brand-muted hover:bg-brand-surface/50 hover:text-brand-text'
                                 }`}
                         >

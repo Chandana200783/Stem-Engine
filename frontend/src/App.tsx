@@ -240,7 +240,7 @@ function App() {
             <main className="flex-1 flex flex-col h-screen overflow-y-auto bg-[#080e1a]">
 
                 {/* Top Bar */}
-                <header className="px-8 py-4 flex items-center justify-between border-b border-brand-muted/10 shrink-0 bg-[#0b1121]/80 backdrop-blur-md sticky top-0 z-50">
+                <header className="px-8 py-4 flex items-center justify-between shrink-0 bg-[#0b1121]/80 backdrop-blur-md sticky top-0 z-50">
                     <h2 className="text-lg font-semibold text-white tracking-wide">
                         {tabLabel[activeTab] ?? activeTab}
                     </h2>
@@ -262,7 +262,7 @@ function App() {
                         {/* User avatar */}
                         <button
                             onClick={() => setActiveTab('settings')}
-                            className="flex items-center space-x-2 px-3 py-1.5 rounded-xl border border-brand-muted/10 hover:border-brand-accent/30 hover:bg-brand-surface/50 transition-all group"
+                            className="flex items-center space-x-2 px-3 py-1.5 rounded-xl hover:bg-brand-surface/50 transition-all group"
                             title="Settings"
                         >
                             <div className="w-7 h-7 rounded-full bg-blue-600/20 border border-blue-500/30 flex items-center justify-center shadow-sm">
