@@ -7,7 +7,7 @@ export const solveWithAI = async (
     subject: string,
     level: string = 'Step by Step',
     language: string = 'English',
-    provider: string = 'huggingface',
+    provider: string = 'gemini',
     model?: string
 ): Promise<SolveResult> => {
     try {

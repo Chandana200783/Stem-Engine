@@ -369,8 +369,9 @@ export const ProblemSolver: React.FC<ProblemSolverProps> = ({ onAddPyq, language
             console.log("OCR Result:", result);
             if (result.success) {
                 // Determine the best text to show
-                const textToShow = result.questions && result.questions.length > 0
-                    ? result.questions[0]
+                const questions = (result as any).questions || [];
+                const textToShow = questions.length > 0
+                    ? questions[0]
                     : (result.text || "No text detected in image.");
 
                 setProblemText(textToShow);

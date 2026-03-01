@@ -108,7 +108,7 @@ class AIRequest(BaseModel):
     subject: Optional[str] = "General STEM"
     level: Optional[str] = "Detailed"
     language: Optional[str] = "English"
-    provider: Optional[str] = "huggingface" # Default
+    provider: Optional[str] = "gemini" # Default changed to gemini
     model: Optional[str] = None
 
 @router.post("/ai")
@@ -151,8 +151,12 @@ async def solve_with_ai(request: AIRequest):
                 return {"success": False, "error": "GEMINI_API_KEY not found"}
             
             genai.configure(api_key=api_key)
-            model = genai.GenerativeModel('gemini-1.5-flash', system_instruction=system_prompt)
-            response = model.generate_content(user_prompt)
+            # Use gemini-1.5-flash which is great for scanning too
+            model = genai.GenerativeModel('gemini-1.5-flash')
+            
+            # Combine system prompt with user prompt for easier handling in some versions
+            full_prompt = f"{system_prompt}\n\nUser Question: {user_prompt}"
+            response = model.generate_content(full_prompt)
             generated_text = response.text
             return _process_ai_response(generated_text)
         except Exception as e:

@@ -54,9 +54,4 @@ export const scanImage = async (file: File) => {
     }
 };
 
-// Extension for strip since it might not be in the browser environment
-if (!(String.prototype as any).strip) {
-    (String.prototype as any).strip = function () {
-        return this.trim();
-    };
-}
+// No custom strip needed, use .trim()
