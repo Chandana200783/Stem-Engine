@@ -176,7 +176,7 @@ export const ProblemSolver: React.FC<ProblemSolverProps> = ({ onAddPyq, language
         setPyqSaved(false);
 
         try {
-            const provider = localStorage.getItem('ai_provider') || 'huggingface';
+            const provider = localStorage.getItem('ai_provider') || 'gemini';
             let result = await solveWithAI(problemText, subject, expLevel, language, provider);
 
             // If AI failed or returned an empty successful result, try local fallback
@@ -369,17 +369,22 @@ export const ProblemSolver: React.FC<ProblemSolverProps> = ({ onAddPyq, language
             console.log("OCR Result:", result);
             if (result.success) {
                 // Determine the best text to show
-                const questions = (result as any).questions || [];
+                const questions: string[] = (result as any).questions ?? [];
                 const textToShow = questions.length > 0
                     ? questions[0]
-                    : (result.text || "No text detected in image.");
+                    : ((result as any).text || "No text detected in image.");
 
                 setProblemText(textToShow);
 
-                if (result.is_paper && result.questions.length > 1) {
+                // Auto-solve if it's a substantive question
+                if (textToShow.length > 10) {
+                    setTimeout(() => handleSolve(), 200);
+                }
+
+                if ((result as any).is_paper && questions.length > 1) {
                     // Also add all to bank if multiple
                     if (onAddPyq) {
-                        result.questions.forEach((q: string) => {
+                        questions.forEach((q: string) => {
                             onAddPyq({
                                 question: q,
                                 subject,
@@ -387,7 +392,7 @@ export const ProblemSolver: React.FC<ProblemSolverProps> = ({ onAddPyq, language
                                 savedAt: new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }),
                             });
                         });
-                        alert(`Extracted ${result.questions.length} questions and added them to your PYQ Bank!`);
+                        alert(`Extracted ${questions.length} questions and added them to your PYQ Bank!`);
                     }
                 }
             } else {
@@ -747,7 +752,8 @@ export const ProblemSolver: React.FC<ProblemSolverProps> = ({ onAddPyq, language
             {/* Action Buttons */}
             <div className="flex flex-wrap gap-3 mb-8">
                 <button
-                    type="submit"
+                    type="button"
+                    onClick={() => handleSolve()}
                     disabled={isSolving || !problemText.trim()}
                     className="bg-brand-accent hover:bg-blue-400 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-2.5 px-6 rounded-xl flex items-center space-x-2 transition-all shadow-lg shadow-brand-accent/20 active:scale-95 text-sm"
                 >

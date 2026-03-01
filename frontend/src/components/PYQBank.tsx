@@ -126,7 +126,7 @@ export const PYQBank: React.FC<PYQBankProps> = ({ pyqs, onRemovePyq, onPractice,
                                     )}
                                     {onRemovePyq && (
                                         <button
-                                            onClick={() => onRemovePyq(pyqs.indexOf(q))}
+                                            onClick={() => onRemovePyq((q as any).id ?? pyqs.indexOf(q))}
                                             className="p-2 bg-red-600/10 hover:bg-red-600/30 text-red-400 rounded-lg transition-colors"
                                             title="Remove from PYQ Bank"
                                         >

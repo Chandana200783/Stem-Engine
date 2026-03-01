@@ -49,7 +49,7 @@ export const scanImage = async (file: File) => {
         // Fallback or detailed error
         return {
             success: false,
-            error: "Failed to scan image. Ensure the backend server is running and Tesseract is installed."
+            error: "Failed to scan image. Ensure the STEM Engine backend server is running and AI features are enabled."
         };
     }
 };

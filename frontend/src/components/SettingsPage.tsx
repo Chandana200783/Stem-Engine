@@ -6,7 +6,7 @@ import {
 import { translations, Language } from '../translations';
 
 interface SettingsProps {
-    user?: { name: string; email: string };
+    user?: { name: string; email: string; role?: 'teacher' | 'student'; community_name?: string };
     onLogout?: () => void;
     language: Language;
     onLanguageChange: (lang: Language) => void;

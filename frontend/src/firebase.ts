@@ -1,17 +1,17 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
-import { getAnalytics } from "firebase/analytics";
+import { getAnalytics } from 'firebase/analytics';
 
 const firebaseConfig = {
-    apiKey: "AIzaSyCDn5QqBJ4TeUNlCa6K7-L7JWm316jBvkc",
-    authDomain: "my-calculator-c096c.firebaseapp.com",
-    databaseURL: "https://my-calculator-c096c-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "my-calculator-c096c",
-    storageBucket: "my-calculator-c096c.firebasestorage.app",
-    messagingSenderId: "1002095565016",
-    appId: "1:1002095565016:web:dfc64658f311cd17131fad",
-    measurementId: "G-3JBTMM91T8"
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+    databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.VITE_FIREBASE_APP_ID,
+    measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
 const app = initializeApp(firebaseConfig);

@@ -3,7 +3,12 @@ import { Brain, Flame, Target, TrendingUp, Zap, ChevronRight, BookOpen, Atom, Sh
 import { translations, Language } from '../translations';
 import { Activity } from '../App';
 
-export const Dashboard: React.FC<{ onNavigate?: (tab: string) => void; language: Language; activities: Activity[] }> = ({ onNavigate, language, activities }) => {
+export const Dashboard: React.FC<{
+    onNavigate?: (tab: string) => void;
+    language: Language;
+    activities: Activity[];
+    stats?: { problems_solved: number; xp: number; streak: number };
+}> = ({ onNavigate, language, activities, stats }) => {
     const t = translations[language];
     return (
         <div className="flex flex-col space-y-6 animate-in fade-in duration-500">
@@ -29,13 +34,13 @@ export const Dashboard: React.FC<{ onNavigate?: (tab: string) => void; language:
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <StatCard
                     icon={<Brain className="w-5 h-5 text-blue-400" />}
-                    value="2"
+                    value={stats?.problems_solved || 0}
                     label={t.dashboard.stats.solved}
                     bgClass="bg-[#0f172a]"
                 />
                 <StatCard
                     icon={<Flame className="w-5 h-5 text-orange-400" />}
-                    value="1"
+                    value={stats?.streak || 0}
                     label={t.dashboard.stats.streak}
                     subLabel="Keep it going!"
                     bgClass="bg-[#0f172a]"
@@ -48,7 +53,7 @@ export const Dashboard: React.FC<{ onNavigate?: (tab: string) => void; language:
                 />
                 <StatCard
                     icon={<TrendingUp className="w-5 h-5 text-purple-400" />}
-                    value="0"
+                    value={Math.floor((stats?.xp || 0) / 100)}
                     label={t.dashboard.stats.mastered}
                     bgClass="bg-[#0f172a]"
                 />
@@ -61,32 +66,34 @@ export const Dashboard: React.FC<{ onNavigate?: (tab: string) => void; language:
                         <div className="flex items-center space-x-3">
                             <div className="bg-orange-500/20 p-2.5 rounded-xl relative">
                                 <Zap className="w-6 h-6 text-orange-500 fill-orange-500" />
-                                <span className="absolute -bottom-1 -right-1 bg-[#0b1121] text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">1</span>
+                                <span className="absolute -bottom-1 -right-1 bg-[#0b1121] text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
+                                    {Math.floor((stats?.xp || 0) / 100) + 1}
+                                </span>
                             </div>
                             <div>
-                                <p className="text-brand-muted text-sm font-medium">Level 1</p>
+                                <p className="text-brand-muted text-sm font-medium">Level {Math.floor((stats?.xp || 0) / 100) + 1}</p>
                                 <div className="flex items-center space-x-1.5">
                                     <Zap className="w-4 h-4 text-orange-500 fill-orange-500" />
-                                    <span className="text-xl font-bold text-white">20 XP</span>
+                                    <span className="text-xl font-bold text-white">{stats?.xp || 0} XP</span>
                                 </div>
                             </div>
                         </div>
                         <div className="text-right">
                             <p className="text-brand-muted text-xs font-medium">Next level</p>
-                            <p className="text-white font-semibold">480 XP</p>
+                            <p className="text-white font-semibold">{(Math.floor((stats?.xp || 0) / 100) + 1) * 100} XP</p>
                         </div>
                     </div>
                     <div className="h-2 w-full bg-brand-surface rounded-full overflow-hidden">
-                        <div className="h-full bg-orange-500 rounded-full w-[4%] relative shadow-[0_0_10px_rgba(249,115,22,0.5)]"></div>
+                        <div
+                            className="h-full bg-orange-500 rounded-full transition-all duration-500 shadow-[0_0_10px_rgba(249,115,22,0.5)]"
+                            style={{ width: `${(stats?.xp || 0) % 100}%` }}
+                        ></div>
                     </div>
-                    <p className="text-brand-muted text-xs font-medium text-right">4% to Level 2</p>
+                    <p className="text-brand-muted text-xs font-medium text-right">{(stats?.xp || 0) % 100}% to Next Level</p>
                 </div>
 
                 <div className="flex items-center space-x-6 shrink-0 pt-6 md:pt-0 md:pl-8">
-                    <CircularProgress percentage={100} label="Physics" subtitle="2 solved" color="text-blue-500" icon={<Atom className="w-4 h-4" />} />
-                    <CircularProgress percentage={0} label="Chemistry" subtitle="0 solved" color="text-emerald-500" icon={<Shell className="w-4 h-4" />} />
-                    <CircularProgress percentage={0} label="Biology" subtitle="0 solved" color="text-rose-500" icon={<Microscope className="w-4 h-4" />} />
-                    <CircularProgress percentage={0} label="Mathematics" subtitle="0 solved" color="text-purple-500" icon={<Sigma className="w-4 h-4" />} />
+                    <CircularProgress percentage={Math.min(100, (stats?.problems_solved || 0) * 10)} label="Mastery" subtitle={`${stats?.problems_solved || 0} solved`} color="text-blue-500" icon={<Atom className="w-4 h-4" />} />
                 </div>
             </div>
 

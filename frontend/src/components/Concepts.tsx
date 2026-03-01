@@ -636,9 +636,11 @@ export interface ConceptsProps {
     onUseFormula: (equation: string) => void;
     language: Language;
     onTopicSelect?: (topicTitle: string) => void;
+    role?: 'teacher' | 'student';
 }
 
-export const Concepts: React.FC<ConceptsProps> = ({ onUseFormula, language, onTopicSelect }) => {
+export const Concepts: React.FC<ConceptsProps> = ({ onUseFormula, language, onTopicSelect, role }) => {
+    const isTeacher = role === 'teacher';
     const t = translations[language];
     const [activeSubject, setActiveSubject] = useState<keyof typeof subjectsData>('Physics');
     const [activeTopic, setActiveTopic] = useState<string>('kinematics');
@@ -865,7 +867,7 @@ export const Concepts: React.FC<ConceptsProps> = ({ onUseFormula, language, onTo
                             <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest">{t.concepts.video_ref}</h3>
                         </div>
                         <div className="flex items-center space-x-2">
-                            {videoUrls[activeTopic] && (
+                            {isTeacher && videoUrls[activeTopic] && (
                                 <button
                                     onClick={handleRemoveVideo}
                                     className="flex items-center space-x-1 px-2.5 py-1.5 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-semibold hover:bg-red-500/20 transition-all"
@@ -874,7 +876,7 @@ export const Concepts: React.FC<ConceptsProps> = ({ onUseFormula, language, onTo
                                     <span>{t.concepts.remove}</span>
                                 </button>
                             )}
-                            {!isAddingVideo && (
+                            {isTeacher && !isAddingVideo && (
                                 <button
                                     onClick={() => setIsAddingVideo(true)}
                                     className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold hover:bg-blue-500/20 transition-all"
