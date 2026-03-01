@@ -4,7 +4,10 @@ sympy
 numpy
 python-multipart
 python-dotenv
-axios
+requests
 uvicorn
 jinja2
 markupsafe
+pytesseract
+Pillow
+google-generativeai

@@ -99,7 +99,7 @@ export const Analytics: React.FC<{ language: Language }> = ({ language }) => {
                 {/* Subject Distribution */}
                 <div>
                     <h3 className="text-xs font-bold text-brand-muted uppercase tracking-widest mb-4">Subject Distribution</h3>
-                    <div className="flex items-center justify-center bg-[#0b1121] rounded-xl border border-brand-muted/10">
+                    <div className="flex items-center justify-center bg-[#0b1121] rounded-xl shadow-md">
                         <PlotComponent data={donutData} layout={donutLayout} config={{ displayModeBar: false }} className="w-full" />
                     </div>
                 </div>
@@ -107,7 +107,7 @@ export const Analytics: React.FC<{ language: Language }> = ({ language }) => {
                 {/* Skill Radar */}
                 <div>
                     <h3 className="text-xs font-bold text-brand-muted uppercase tracking-widest mb-4">Skill Radar</h3>
-                    <div className="flex items-center justify-center bg-[#0b1121] rounded-xl border border-brand-muted/10">
+                    <div className="flex items-center justify-center bg-[#0b1121] rounded-xl shadow-md">
                         <PlotComponent data={radarData} layout={radarLayout} config={{ displayModeBar: false }} className="w-full" />
                     </div>
                 </div>
@@ -120,7 +120,7 @@ export const Analytics: React.FC<{ language: Language }> = ({ language }) => {
                 {/* Accuracy Trend */}
                 <div>
                     <h3 className="text-xs font-bold text-brand-muted uppercase tracking-widest mb-4">Accuracy Trend</h3>
-                    <div className="p-4 bg-[#0b1121] rounded-xl border border-brand-muted/10">
+                    <div className="p-4 bg-[#0b1121] rounded-xl shadow-md">
                         <PlotComponent data={lineData} layout={barLayout} config={{ displayModeBar: false }} className="w-full" />
                     </div>
                 </div>
@@ -128,7 +128,7 @@ export const Analytics: React.FC<{ language: Language }> = ({ language }) => {
                 {/* Most Practiced Topics */}
                 <div>
                     <h3 className="text-xs font-bold text-brand-muted uppercase tracking-widest mb-4">Most Practiced Topics</h3>
-                    <div className="p-4 bg-[#0b1121] rounded-xl border border-brand-muted/10">
+                    <div className="p-4 bg-[#0b1121] rounded-xl shadow-md">
                         <PlotComponent data={barData} layout={barLayout} config={{ displayModeBar: false }} className="w-full" />
                     </div>
                 </div>
@@ -140,8 +140,8 @@ export const Analytics: React.FC<{ language: Language }> = ({ language }) => {
 
 // Sub-component
 const StatCard = ({ icon, value, label }: any) => (
-    <div className="bg-[#0b1121] border border-brand-muted/10 p-5 rounded-xl flex flex-col space-y-3 shadow-sm">
-        <div className="bg-brand-surface/40 w-10 h-10 rounded-lg flex items-center justify-center border border-brand-muted/10">
+    <div className="bg-[#0b1121] p-5 rounded-xl flex flex-col space-y-3 shadow-md hover:shadow-lg transition-shadow">
+        <div className="bg-brand-surface/40 w-10 h-10 rounded-lg flex items-center justify-center shadow-inner">
             {icon}
         </div>
         <div>

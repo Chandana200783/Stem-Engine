@@ -33,7 +33,7 @@ export const Achievements: React.FC<{ language: Language }> = ({ language }) => 
         <div className="flex flex-col h-full animate-in fade-in duration-500 max-w-6xl">
 
             {/* Header */}
-            <div className="flex justify-between items-start mb-10 pb-6 border-b border-brand-muted/10">
+            <div className="flex justify-between items-start mb-10 pb-6 shadow-[0_1px_0_0_rgba(255,255,255,0.03)]">
                 <div className="flex items-center space-x-4">
                     <Trophy className="w-8 h-8 text-yellow-500" />
                     <div>
@@ -56,8 +56,8 @@ export const Achievements: React.FC<{ language: Language }> = ({ language }) => 
                         key={filter}
                         onClick={() => setActiveFilter(filter)}
                         className={`px-4 py-2 rounded-lg text-sm transition-all duration-200 whitespace-nowrap ${activeFilter === filter
-                            ? 'bg-brand-surface border border-brand-muted/30 text-white shadow-sm'
-                            : 'text-brand-muted hover:text-white border border-transparent'
+                            ? 'bg-brand-surface text-white shadow-md'
+                            : 'text-brand-muted hover:text-white'
                             }`}
                     >
                         {filter}
@@ -70,14 +70,14 @@ export const Achievements: React.FC<{ language: Language }> = ({ language }) => 
                 {filteredBadges.map(badge => (
                     <div
                         key={badge.id}
-                        className={`p-4 rounded-xl border flex items-center space-x-4 ${badge.earned
-                            ? 'bg-yellow-900/10 border-yellow-500/30 shadow-[inset_0_1px_0_0_rgba(234,179,8,0.2)] shadow-[0_0_20px_rgba(234,179,8,0.05)]'
-                            : 'bg-[#0b1121] border-brand-muted/10 opacity-70'
+                        className={`p-4 rounded-xl flex items-center space-x-4 ${badge.earned
+                            ? 'bg-yellow-900/15 shadow-[0_0_20px_rgba(234,179,8,0.05)]'
+                            : 'bg-[#0b1121] opacity-70'
                             }`}
                     >
-                        <div className={`w-12 h-12 flex items-center justify-center rounded-lg border ${badge.earned
-                            ? 'bg-yellow-500/10 border-yellow-500/20'
-                            : 'bg-brand-surface border-brand-muted/20'
+                        <div className={`w-12 h-12 flex items-center justify-center rounded-lg ${badge.earned
+                            ? 'bg-yellow-500/10'
+                            : 'bg-brand-surface'
                             }`}>
                             {badge.earned ? (
                                 <Star className="w-6 h-6 text-yellow-500 fill-yellow-500/20" />
@@ -97,7 +97,7 @@ export const Achievements: React.FC<{ language: Language }> = ({ language }) => 
                                         Earned
                                     </span>
                                 ) : (
-                                    <span className="bg-brand-surface text-brand-muted text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded border border-brand-muted/10">
+                                    <span className="bg-brand-surface text-brand-muted text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded">
                                         Locked
                                     </span>
                                 )}

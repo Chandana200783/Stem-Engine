@@ -61,7 +61,7 @@ export const Dashboard: React.FC<{ onNavigate?: (tab: string) => void; language:
                         <div className="flex items-center space-x-3">
                             <div className="bg-orange-500/20 p-2.5 rounded-xl relative">
                                 <Zap className="w-6 h-6 text-orange-500 fill-orange-500" />
-                                <span className="absolute -bottom-1 -right-1 bg-[#0b1121] text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full border border-brand-muted/20">1</span>
+                                <span className="absolute -bottom-1 -right-1 bg-[#0b1121] text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">1</span>
                             </div>
                             <div>
                                 <p className="text-brand-muted text-sm font-medium">Level 1</p>
@@ -82,7 +82,7 @@ export const Dashboard: React.FC<{ onNavigate?: (tab: string) => void; language:
                     <p className="text-brand-muted text-xs font-medium text-right">4% to Level 2</p>
                 </div>
 
-                <div className="flex items-center space-x-6 shrink-0 border-t md:border-t-0 md:border-l border-brand-muted/10 pt-6 md:pt-0 md:pl-8">
+                <div className="flex items-center space-x-6 shrink-0 pt-6 md:pt-0 md:pl-8">
                     <CircularProgress percentage={100} label="Physics" subtitle="2 solved" color="text-blue-500" icon={<Atom className="w-4 h-4" />} />
                     <CircularProgress percentage={0} label="Chemistry" subtitle="0 solved" color="text-emerald-500" icon={<Shell className="w-4 h-4" />} />
                     <CircularProgress percentage={0} label="Biology" subtitle="0 solved" color="text-rose-500" icon={<Microscope className="w-4 h-4" />} />
@@ -124,7 +124,7 @@ export const Dashboard: React.FC<{ onNavigate?: (tab: string) => void; language:
 // Sub-components
 const StatCard = ({ icon, value, label, subLabel, bgClass }: any) => (
     <div className={`${bgClass} p-5 rounded-xl flex flex-col space-y-3 hover:bg-brand-surface/80 transition-all shadow-sm`}>
-        <div className="bg-brand-surface/50 w-10 h-10 rounded-lg flex items-center justify-center border border-brand-muted/10 shadow-sm">
+        <div className="bg-brand-surface/50 w-10 h-10 rounded-lg flex items-center justify-center shadow-sm">
             {icon}
         </div>
         <div>
@@ -145,7 +145,7 @@ const CircularProgress = ({ percentage, label, subtitle, color, icon }: any) => 
             <div className="relative w-16 h-16 flex items-center justify-center">
                 {/* Background Track */}
                 <svg className="w-full h-full transform -rotate-90" viewBox="0 0 64 64">
-                    <circle cx="32" cy="32" r={radius} fill="transparent" stroke="currentColor" strokeWidth="4" className="text-brand-surface" />
+                    <circle cx="32" cy="32" r={radius} fill="transparent" stroke="currentColor" strokeWidth="3" className="text-white/5" />
                     {/* Foreground Progress */}
                     <circle
                         cx="32"

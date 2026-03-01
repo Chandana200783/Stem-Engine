@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = '/api';
+const API_BASE_URL = 'http://127.0.0.1:8000/api';
 
 export const api = axios.create({
     baseURL: API_BASE_URL,
@@ -31,30 +31,25 @@ export const searchFormulas = async (query: string) => {
     return response.data;
 };
 
-import { createWorker } from 'tesseract.js';
-
 export const scanImage = async (file: File) => {
     try {
-        const worker = await createWorker('eng');
-        const ret = await worker.recognize(file);
-        await worker.terminate();
+        const formData = new FormData();
+        formData.append('file', file);
 
-        const text = ret.data.text;
+        const response = await api.post('/scan-image', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
 
-        // Simple extraction logic for questions (similar to backend)
-        const questions = text.split(/\n\s*\d+[\.\)]\s+|\n\s*Q(?:uestion)?\s*\.?\s*\d+\s*[\.\:\-]?\s*/).filter(q => q.trim().length > 5);
-
-        return {
-            success: true,
-            text: text,
-            questions: questions.length > 0 ? questions : [text.strip()],
-            is_paper: questions.length > 1
-        };
+        return response.data;
     } catch (error) {
-        console.error("Local OCR Error:", error);
+        console.error("Backend OCR Error:", error);
+
+        // Fallback or detailed error
         return {
             success: false,
-            error: "Failed to scan image locally: " + (error as Error).message
+            error: "Failed to scan image. Ensure the backend server is running and Tesseract is installed."
         };
     }
 };

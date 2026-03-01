@@ -6,7 +6,7 @@ interface SimulatorProps {
 }
 
 const SolvingMethod = ({ title, steps }: { title: string; steps: string[] }) => (
-    <div className="bg-blue-500/5 border border-blue-500/10 rounded-xl p-4 mt-6">
+    <div className="bg-blue-500/5 rounded-xl p-4 mt-6 shadow-sm">
         <div className="flex items-center space-x-2 mb-3">
             <BookOpen className="w-4 h-4 text-blue-400" />
             <h4 className="text-sm font-bold text-white uppercase tracking-wider">{title}: Solving Method</h4>
@@ -14,7 +14,7 @@ const SolvingMethod = ({ title, steps }: { title: string; steps: string[] }) => 
         <div className="space-y-2">
             {steps.map((step, i) => (
                 <div key={i} className="flex items-start space-x-3 group">
-                    <span className="flex-shrink-0 w-5 h-5 rounded-full bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-[10px] font-bold text-blue-400">
+                    <span className="flex-shrink-0 w-5 h-5 rounded-full bg-blue-500/10 flex items-center justify-center text-[10px] font-bold text-blue-400">
                         {i + 1}
                     </span>
                     <p className="text-xs text-slate-400 leading-relaxed">{step}</p>
@@ -26,7 +26,7 @@ const SolvingMethod = ({ title, steps }: { title: string; steps: string[] }) => 
 
 const AssetDisplay = ({ src, caption }: { src: string, caption: string }) => (
     <div className="space-y-4">
-        <div className="relative group bg-slate-900 rounded-xl border border-white/5 overflow-hidden aspect-video flex items-center justify-center">
+        <div className="relative group bg-slate-900 rounded-xl overflow-hidden aspect-video flex items-center justify-center shadow-lg">
             <img src={src} alt={caption} className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105" />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 to-transparent flex items-end p-6">
                 <p className="text-blue-300 text-xs font-mono uppercase tracking-widest">{caption}</p>
@@ -76,7 +76,7 @@ const KinematicsSimulator = () => {
 
     return (
         <div className="space-y-6">
-            <div className="relative bg-slate-900 rounded-xl border border-white/5 overflow-hidden aspect-video">
+            <div className="relative bg-slate-900 rounded-xl overflow-hidden aspect-video shadow-lg">
                 <svg viewBox="0 0 800 400" className="w-full h-full">
                     <line x1="0" y1="350" x2="800" y2="350" stroke="#334155" strokeWidth="2" />
                     <polyline points={points.join(' ')} fill="none" stroke="#3b82f6" strokeWidth="2" strokeDasharray="4" />
@@ -88,8 +88,8 @@ const KinematicsSimulator = () => {
                 </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
-                <div className="bg-[#111827] p-4 rounded-xl border border-white/5"><label className="text-xs font-bold text-slate-400 uppercase mb-2 block">Angle ({angle}°)</label><input type="range" min="0" max="90" value={angle} onChange={e => setAngle(Number(e.target.value))} className="w-full" /></div>
-                <div className="bg-[#111827] p-4 rounded-xl border border-white/5"><label className="text-xs font-bold text-slate-400 uppercase mb-2 block">Velocity ({velocity})</label><input type="range" min="10" max="100" value={velocity} onChange={e => setVelocity(Number(e.target.value))} className="w-full" /></div>
+                <div className="bg-[#111827] p-4 rounded-xl shadow-sm"><label className="text-xs font-bold text-slate-400 uppercase mb-2 block">Angle ({angle}°)</label><input type="range" min="0" max="90" value={angle} onChange={e => setAngle(Number(e.target.value))} className="w-full" /></div>
+                <div className="bg-[#111827] p-4 rounded-xl shadow-sm"><label className="text-xs font-bold text-slate-400 uppercase mb-2 block">Velocity ({velocity})</label><input type="range" min="10" max="100" value={velocity} onChange={e => setVelocity(Number(e.target.value))} className="w-full" /></div>
             </div>
             <SolvingMethod title="Kinematics" steps={["v₀x = v₀ cos θ, v₀y = v₀ sin θ", "x(t) = v₀x·t", "y(t) = v₀y·t - ½gt²", "Range R = v₀²sin(2θ)/g"]} />
         </div>
@@ -102,7 +102,7 @@ const AtomicSimulator = () => {
     const shells = []; if (protons > 0) shells.push(Math.min(protons, 2)); if (protons > 2) shells.push(Math.min(protons - 2, 8)); if (protons > 10) shells.push(Math.min(protons - 10, 8));
     return (
         <div className="space-y-6">
-            <div className="relative bg-slate-900 rounded-xl border border-white/5 overflow-hidden aspect-video flex items-center justify-center">
+            <div className="relative bg-slate-900 rounded-xl overflow-hidden aspect-video flex items-center justify-center shadow-lg">
                 <svg viewBox="0 0 400 400" className="w-full max-w-[350px]">
                     <circle cx="200" cy="200" r="15" fill="#ef4444" className="animate-pulse" />
                     <text x="200" y="205" textAnchor="middle" fill="white" className="text-[10px] font-bold">{protons}P</text>
@@ -120,7 +120,7 @@ const AtomicSimulator = () => {
                     })}
                 </svg>
             </div>
-            <div className="bg-[#111827] p-4 rounded-xl border border-white/5"><label className="text-xs font-bold text-slate-400 uppercase mb-2 block">Atomic Number ({protons})</label><input type="range" min="1" max="18" value={protons} onChange={e => setProtons(Number(e.target.value))} className="w-full" /></div>
+            <div className="bg-[#111827] p-4 rounded-xl shadow-sm"><label className="text-xs font-bold text-slate-400 uppercase mb-2 block">Atomic Number ({protons})</label><input type="range" min="1" max="18" value={protons} onChange={e => setProtons(Number(e.target.value))} className="w-full" /></div>
             <SolvingMethod title="Atomic Structure" steps={["Z = number of protons", "Electrons fill shells: 2, 8, 8...", "E_n = -13.6 Z²/n² eV", "Configuration determines properties"]} />
         </div>
     );
@@ -139,7 +139,7 @@ const DynamicsSimulator = () => {
     }, [isPlaying, force, mass, vel]);
     return (
         <div className="space-y-6">
-            <div className="relative bg-slate-900 rounded-xl border border-white/5 overflow-hidden aspect-video flex items-end justify-center p-10">
+            <div className="relative bg-slate-900 rounded-xl overflow-hidden aspect-video flex items-end justify-center p-10 shadow-lg">
                 <svg viewBox="0 0 400 200" className="w-full max-w-[500px]">
                     <line x1="0" y1="180" x2="400" y2="180" stroke="#334155" strokeWidth="2" />
                     <rect x={pos} y={140} width="40" height="40" fill="#3b82f6" rx="4" />
@@ -148,8 +148,8 @@ const DynamicsSimulator = () => {
                 <div className="absolute bottom-4 left-4 flex space-x-2"><button onClick={() => setIsPlaying(!isPlaying)} className="p-2 bg-blue-500 rounded-full text-white">{isPlaying ? <Pause size={18} /> : <Play size={18} />}</button></div>
             </div>
             <div className="grid grid-cols-2 gap-4">
-                <div className="bg-[#111827] p-3 rounded-lg border border-white/5"><label className="text-[10px] text-slate-400 uppercase font-bold mb-1 block">Force ({force}N)</label><input type="range" min="10" max="100" value={force} onChange={e => setForce(Number(e.target.value))} className="w-full accent-blue-500" /></div>
-                <div className="bg-[#111827] p-3 rounded-lg border border-white/5"><label className="text-[10px] text-slate-400 uppercase font-bold mb-1 block">Mass ({mass}kg)</label><input type="range" min="1" max="50" value={mass} onChange={e => setMass(Number(e.target.value))} className="w-full accent-blue-500" /></div>
+                <div className="bg-[#111827] p-3 rounded-lg shadow-sm"><label className="text-[10px] text-slate-400 uppercase font-bold mb-1 block">Force ({force}N)</label><input type="range" min="10" max="100" value={force} onChange={e => setForce(Number(e.target.value))} className="w-full accent-blue-500" /></div>
+                <div className="bg-[#111827] p-3 rounded-lg shadow-sm"><label className="text-[10px] text-slate-400 uppercase font-bold mb-1 block">Mass ({mass}kg)</label><input type="range" min="1" max="50" value={mass} onChange={e => setMass(Number(e.target.value))} className="w-full accent-blue-500" /></div>
             </div>
             <SolvingMethod title="Dynamics" steps={["a = F_net / m", "v(t) = v₀ + at", "s(t) = s₀ + v₀t + ½at²", "Force is the rate of change of momentum"]} />
         </div>
@@ -161,18 +161,18 @@ const TrigSimulator = () => {
     const px = 150 + 100 * Math.cos(rad); const py = 150 - 100 * Math.sin(rad);
     return (
         <div className="space-y-6">
-            <div className="relative bg-slate-900 rounded-xl border border-white/5 overflow-hidden aspect-video flex items-center justify-center">
+            <div className="relative bg-slate-900 rounded-xl overflow-hidden aspect-video flex items-center justify-center shadow-lg">
                 <svg viewBox="0 0 300 300" className="w-full max-w-[300px]">
                     <circle cx="150" cy="150" r="100" fill="none" stroke="#334155" strokeWidth="1" />
                     <line x1="30" y1="150" x2="270" y2="150" stroke="#1e293b" /><line x1="150" y1="30" x2="150" y2="270" stroke="#1e293b" />
                     <line x1={px} y1="150" x2={px} y2={py} stroke="#ef4444" strokeWidth="3" /><line x1="150" y1="150" x2={px} y2="150" stroke="#10b981" strokeWidth="3" />
                     <line x1="150" y1="150" x2={px} y2={py} stroke="#3b82f6" strokeWidth="2" /><circle cx={px} cy={py} r="4" fill="white" />
                 </svg>
-                <div className="absolute top-4 right-4 bg-slate-900/80 p-3 rounded-lg border border-white/10 text-[10px] font-mono text-blue-300">
+                <div className="absolute top-4 right-4 bg-slate-900/80 p-3 rounded-lg text-[10px] font-mono text-blue-300 shadow-lg">
                     <div>sin(θ) = {Math.sin(rad).toFixed(3)}</div><div>cos(θ) = {Math.cos(rad).toFixed(3)}</div>
                 </div>
             </div>
-            <div className="bg-[#111827] p-4 rounded-xl border border-white/5"><input type="range" min="0" max="360" value={angle} onChange={e => setAngle(Number(e.target.value))} className="w-full" /></div>
+            <div className="bg-[#111827] p-4 rounded-xl shadow-sm"><input type="range" min="0" max="360" value={angle} onChange={e => setAngle(Number(e.target.value))} className="w-full" /></div>
             <SolvingMethod title="Trigonometry" steps={["P(x,y) = (cos θ, sin θ)", "tan θ = sin θ / cos θ", "Radius = 1 in unit circle", "sin²θ + cos²θ = 1"]} />
         </div>
     );
@@ -193,8 +193,8 @@ const FunctionPlotter = ({ type }: { type: 'diff' | 'int' | 'algebra' }) => {
     }, [xVal, type]);
     return (
         <div className="space-y-6">
-            <div className="relative bg-slate-900 rounded-xl border border-white/5 overflow-hidden aspect-video"><canvas ref={canvasRef} width={600} height={300} className="w-full h-full" /></div>
-            <div className="bg-[#111827] p-4 rounded-xl border border-white/5"><input type="range" min="-4" max="4" step="0.1" value={xVal} onChange={e => setXVal(Number(e.target.value))} className="w-full" /></div>
+            <div className="relative bg-slate-900 rounded-xl overflow-hidden aspect-video shadow-lg"><canvas ref={canvasRef} width={600} height={300} className="w-full h-full" /></div>
+            <div className="bg-[#111827] p-4 rounded-xl shadow-sm"><input type="range" min="-4" max="4" step="0.1" value={xVal} onChange={e => setXVal(Number(e.target.value))} className="w-full" /></div>
             <SolvingMethod title={type === 'diff' ? "Derivatives" : "Integrals"} steps={["Calculate rate of change f'(x)", "Observe tangent slope", "Determine area under graph", "Limit approach as Δx -> 0"]} />
         </div>
     );
@@ -204,7 +204,7 @@ const CircuitSim = () => {
     const [v, setV] = useState(12); const [r, setR] = useState(10); const i_curr = v / r;
     return (
         <div className="space-y-6">
-            <div className="relative bg-slate-900 rounded-xl border border-white/5 overflow-hidden aspect-video flex items-center justify-center">
+            <div className="relative bg-slate-900 rounded-xl overflow-hidden aspect-video flex items-center justify-center shadow-lg">
                 <svg viewBox="0 0 400 200" className="w-full max-w-[400px]">
                     <rect x="50" y="50" width="300" height="100" fill="none" stroke="#334155" strokeWidth="2" />
                     <g transform="translate(50, 100)"><line x1="0" y1="-20" x2="0" y2="20" stroke="#ef4444" strokeWidth="4" /><text x="-40" y="5" fill="#ef4444" fontSize="12" fontWeight="bold">{v}V</text></g>
@@ -223,14 +223,14 @@ const PHSim = () => {
     const getColor = (v: number) => { if (v < 3) return '#ef4444'; if (v < 6) return '#fb923c'; if (v < 8) return '#10b981'; if (v < 11) return '#3b82f6'; return '#8b5cf6'; };
     return (
         <div className="space-y-6">
-            <div className="relative bg-slate-900 rounded-xl border border-white/5 overflow-hidden aspect-video flex flex-col items-center justify-center p-10">
+            <div className="relative bg-slate-900 rounded-xl overflow-hidden aspect-video flex flex-col items-center justify-center p-10 shadow-lg">
                 <div className="w-32 h-44 border-4 border-slate-700/50 rounded-b-3xl relative overflow-hidden bg-white/5">
                     <div className="absolute bottom-0 w-full transition-all duration-1000" style={{ height: `${(pH / 14) * 100}%`, backgroundColor: getColor(pH), opacity: 0.7 }} />
                     <div className="absolute inset-0 flex items-center justify-center text-4xl font-black text-white mix-blend-overlay">{pH.toFixed(1)}</div>
                 </div>
                 <div className="mt-4 text-xs font-bold uppercase tracking-widest" style={{ color: getColor(pH) }}>{pH < 7 ? 'Acidic' : pH > 7 ? 'Basic' : 'Neutral'}</div>
             </div>
-            <div className="bg-[#111827] p-4 rounded-xl border border-white/5"><input type="range" min="0" max="14" step="0.1" value={pH} onChange={e => setPH(Number(e.target.value))} className="w-full" /></div>
+            <div className="bg-[#111827] p-4 rounded-xl shadow-sm"><input type="range" min="0" max="14" step="0.1" value={pH} onChange={e => setPH(Number(e.target.value))} className="w-full" /></div>
             <SolvingMethod title="Acids & Bases" steps={["pH = -log[H⁺]", "Neutral pH is 7.0 at 25°C", "Acids release H⁺ ions", "Bases release OH⁻ ions"]} />
         </div>
     );
@@ -241,7 +241,7 @@ const ProbabilitySim = () => {
     const roll = () => { setRolling(true); setTimeout(() => { setRes(Math.floor(Math.random() * 6) + 1); setRolling(false); }, 500); };
     return (
         <div className="space-y-6 text-center">
-            <div className="relative bg-slate-900 rounded-xl border border-white/5 overflow-hidden aspect-video flex items-center justify-center">
+            <div className="relative bg-slate-900 rounded-xl overflow-hidden aspect-video flex items-center justify-center shadow-lg">
                 <div className={`w-16 h-16 bg-blue-600 rounded-lg flex items-center justify-center text-3xl font-bold text-white transition-all ${rolling ? 'animate-bounce blur-sm' : ''}`}>{res}</div>
                 <button onClick={roll} disabled={rolling} className="absolute bottom-6 bg-blue-500 px-4 py-2 rounded-full text-xs font-bold text-white hover:bg-blue-600">Roll Dice</button>
             </div>
@@ -255,13 +255,13 @@ const OrbitSim = () => {
     useEffect(() => { const i = setInterval(() => setRot(r => (r + 2) % 360), 30); return () => clearInterval(i); }, []);
     return (
         <div className="space-y-6">
-            <div className="relative bg-slate-900 rounded-xl border border-white/5 overflow-hidden aspect-video flex items-center justify-center">
+            <div className="relative bg-slate-900 rounded-xl overflow-hidden aspect-video flex items-center justify-center shadow-lg">
                 <svg viewBox="0 0 400 400" className="w-full max-w-[300px]">
                     <circle cx="200" cy="200" r="20" fill="#fbbf24" /><circle cx="200" cy="200" r={dist} fill="none" stroke="#334155" strokeDasharray="4" />
                     <circle cx={200 + dist * Math.cos(rot * Math.PI / 180)} cy={200 + dist * Math.sin(rot * Math.PI / 180)} r="8" fill="#60a5fa" />
                 </svg>
             </div>
-            <div className="bg-[#111827] p-4 rounded-xl border border-white/5"><input type="range" min="50" max="150" value={dist} onChange={e => setDist(Number(e.target.value))} className="w-full" /></div>
+            <div className="bg-[#111827] p-4 rounded-xl shadow-sm"><input type="range" min="50" max="150" value={dist} onChange={e => setDist(Number(e.target.value))} className="w-full" /></div>
             <SolvingMethod title="Gravitation" steps={["F = GMm / r²", "Centripetal force F = mv²/r", "Kepler's Laws of motion", "Orbital velocity v = √(GM/r)"]} />
         </div>
     );
@@ -271,7 +271,7 @@ const VectorSim = () => {
     const [x, setX] = useState(80), [y, setY] = useState(-60);
     return (
         <div className="space-y-6">
-            <div className="relative bg-slate-900 rounded-xl border border-white/5 overflow-hidden aspect-video flex items-center justify-center">
+            <div className="relative bg-slate-900 rounded-xl overflow-hidden aspect-video flex items-center justify-center shadow-lg">
                 <svg viewBox="0 0 300 300" className="w-full max-w-[300px]">
                     <line x1="150" y1="0" x2="150" y2="300" stroke="#1e293b" /><line x1="0" y1="150" x2="300" y2="150" stroke="#1e293b" />
                     <line x1="150" y1="150" x2={150 + x} y2={150 + y} stroke="#3b82f6" strokeWidth="3" /><circle cx={150 + x} cy={150 + y} r="4" fill="white" />
@@ -287,12 +287,12 @@ const GasSim = () => {
     const [t, setT] = useState(300); const vol = t / 300;
     return (
         <div className="space-y-6">
-            <div className="relative bg-slate-900 rounded-xl border border-white/5 overflow-hidden aspect-video flex items-center justify-center">
-                <div className="border border-slate-700 p-2 flex flex-wrap" style={{ width: `${vol * 200}px`, height: `${vol * 200}px` }}>
+            <div className="relative bg-slate-900 rounded-xl overflow-hidden aspect-video flex items-center justify-center shadow-lg">
+                <div className="p-2 flex flex-wrap shadow-[inset_0_0_20px_rgba(0,0,0,0.5)] rounded-lg bg-black/20" style={{ width: `${vol * 200}px`, height: `${vol * 200}px` }}>
                     {[...Array(15)].map((_, i) => (<div key={i} className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse m-1" />))}
                 </div>
             </div>
-            <div className="bg-[#111827] p-4 rounded-xl border border-white/5"><input type="range" min="100" max="600" value={t} onChange={e => setT(Number(e.target.value))} className="w-full" /></div>
+            <div className="bg-[#111827] p-4 rounded-xl shadow-sm"><input type="range" min="100" max="600" value={t} onChange={e => setT(Number(e.target.value))} className="w-full" /></div>
             <SolvingMethod title="Gas Laws" steps={["PV = nRT", "Charles's Law: V ∝ T", "Boyle's Law: P ∝ 1/V", "Kinetic Theory of Gases"]} />
         </div>
     );
@@ -303,10 +303,10 @@ const WaveSim = () => {
     const pts = []; for (let x = 0; x <= 400; x += 5) pts.push(`${x},${100 + 30 * Math.sin(f * (x / 40) - t)}`);
     return (
         <div className="space-y-6">
-            <div className="relative bg-slate-900 rounded-xl border border-white/5 overflow-hidden aspect-video flex items-center justify-center">
+            <div className="relative bg-slate-900 rounded-xl overflow-hidden aspect-video flex items-center justify-center shadow-lg">
                 <svg viewBox="0 0 400 200" className="w-full"><polyline points={pts.join(' ')} fill="none" stroke="#60a5fa" strokeWidth="3" /></svg>
             </div>
-            <div className="bg-[#111827] p-4 rounded-xl border border-white/5"><input type="range" min="1" max="10" step="0.1" value={f} onChange={e => setF(Number(e.target.value))} className="w-full" /></div>
+            <div className="bg-[#111827] p-4 rounded-xl shadow-sm"><input type="range" min="1" max="10" step="0.1" value={f} onChange={e => setF(Number(e.target.value))} className="w-full" /></div>
             <SolvingMethod title="Waves" steps={["v = fλ", "Wave equation y(x,t) = A sin(kx-ωt)", "Superposition principle", "Transverse vs Longitudinal"]} />
         </div>
     );
@@ -316,10 +316,10 @@ const BondingSim = () => {
     const [d, setD] = useState(100);
     return (
         <div className="space-y-6">
-            <div className="relative bg-slate-900 rounded-xl border border-white/5 overflow-hidden aspect-video flex items-center justify-center">
+            <div className="relative bg-slate-900 rounded-xl overflow-hidden aspect-video flex items-center justify-center shadow-lg">
                 <div className="flex items-center justify-between" style={{ width: `${d * 2}px` }}><div className="w-10 h-10 bg-blue-500 rounded-full" /><div className="w-10 h-10 bg-emerald-500 rounded-full" /></div>
             </div>
-            <div className="bg-[#111827] p-4 rounded-xl border border-white/5"><input type="range" min="50" max="200" value={d} onChange={e => setD(Number(e.target.value))} className="w-full" /></div>
+            <div className="bg-[#111827] p-4 rounded-xl shadow-sm"><input type="range" min="50" max="200" value={d} onChange={e => setD(Number(e.target.value))} className="w-full" /></div>
             <SolvingMethod title="Bonding" steps={["Lennard-Jones Potential", "Equilibrium bond length", "Ionic vs Covalent attraction", "Electronegativity difference"]} />
         </div>
     );
@@ -332,7 +332,7 @@ const WorkEnergySim = () => {
     const pe = 10 * g * h; const ke = 10 * g * (10 - Math.min(h, 10));
     return (
         <div className="space-y-6">
-            <div className="relative bg-slate-900 rounded-xl border border-white/5 overflow-hidden aspect-video">
+            <div className="relative bg-slate-900 rounded-xl overflow-hidden aspect-video shadow-lg">
                 <svg viewBox="0 0 400 200" className="w-full h-full">
                     <text x="10" y="30" fill="#94a3b8" fontSize="12">h = {h.toFixed(1)} m</text>
                     <rect x="190" y={200 - h * 16} width="20" height={h * 16} fill="#3b82f6" rx="3" />
@@ -341,7 +341,7 @@ const WorkEnergySim = () => {
                     <text x="10" y="90" fill="#a78bfa" fontSize="11">Total = {(pe + ke).toFixed(0)} J</text>
                 </svg>
             </div>
-            <div className="bg-[#111827] p-4 rounded-xl border border-white/5"><input type="range" min="1" max="10" value={h} onChange={e => setH(Number(e.target.value))} className="w-full" /></div>
+            <div className="bg-[#111827] p-4 rounded-xl shadow-sm"><input type="range" min="1" max="10" value={h} onChange={e => setH(Number(e.target.value))} className="w-full" /></div>
             <SolvingMethod title="Work-Energy" steps={["KE = ½mv²", "PE = mgh", "W_net = ΔKE", "Conservation: KE + PE = Total E"]} />
         </div>
     );
@@ -353,7 +353,7 @@ const RotationalSim = () => {
     const angle = w * t;
     return (
         <div className="space-y-6">
-            <div className="relative bg-slate-900 rounded-xl border border-white/5 overflow-hidden aspect-video flex items-center justify-center">
+            <div className="relative bg-slate-900 rounded-xl overflow-hidden aspect-video flex items-center justify-center shadow-lg">
                 <svg viewBox="0 0 300 200" className="w-full h-full">
                     <circle cx="150" cy="100" r="60" fill="none" stroke="#334155" strokeWidth="2" />
                     <circle cx="150" cy="100" r="5" fill="#60a5fa" />
@@ -362,7 +362,7 @@ const RotationalSim = () => {
                     <text x="10" y="30" fill="#94a3b8" fontSize="12">ω = {w} rad/s</text>
                 </svg>
             </div>
-            <div className="bg-[#111827] p-4 rounded-xl border border-white/5"><input type="range" min="0.5" max="6" step="0.1" value={w} onChange={e => setW(Number(e.target.value))} className="w-full" /></div>
+            <div className="bg-[#111827] p-4 rounded-xl shadow-sm"><input type="range" min="0.5" max="6" step="0.1" value={w} onChange={e => setW(Number(e.target.value))} className="w-full" /></div>
             <SolvingMethod title="Rotational" steps={["τ = Iα", "L = Iω", "KE_rot = ½Iω²", "θ = ωt (uniform)"]} />
         </div>
     );
@@ -373,7 +373,7 @@ const ElectrostaticsSim = () => {
     const F = 8.99e9 * q1 * q2 / (r * r);
     return (
         <div className="space-y-6">
-            <div className="relative bg-slate-900 rounded-xl border border-white/5 overflow-hidden aspect-video flex items-center justify-center">
+            <div className="relative bg-slate-900 rounded-xl overflow-hidden aspect-video flex items-center justify-center shadow-lg">
                 <svg viewBox="0 0 400 200" className="w-full h-full">
                     <circle cx="100" cy="100" r={20 + q1 * 5} fill={q1 >= 0 ? "#ef444450" : "#3b82f650"} stroke={q1 >= 0 ? "#ef4444" : "#3b82f6"} strokeWidth="2" />
                     <text x="95" y="105" fill="white" fontSize="12">{q1 > 0 ? '+' : ''}{q1}</text>
@@ -382,7 +382,7 @@ const ElectrostaticsSim = () => {
                     <text x="100" y="30" fill="#94a3b8" fontSize="12">F = {F.toExponential(2)} N at r={r}m</text>
                 </svg>
             </div>
-            <div className="grid grid-cols-3 gap-2 bg-[#111827] p-4 rounded-xl border border-white/5">
+            <div className="grid grid-cols-3 gap-2 bg-[#111827] p-4 rounded-xl shadow-sm">
                 <div><p className="text-xs text-slate-400 mb-1">q1 (μC)</p><input type="range" min="1" max="10" value={q1} onChange={e => setQ1(Number(e.target.value))} className="w-full" /></div>
                 <div><p className="text-xs text-slate-400 mb-1">q2 (μC)</p><input type="range" min="1" max="10" value={q2} onChange={e => setQ2(Number(e.target.value))} className="w-full" /></div>
                 <div><p className="text-xs text-slate-400 mb-1">r (m)</p><input type="range" min="1" max="20" value={r} onChange={e => setR(Number(e.target.value))} className="w-full" /></div>
@@ -398,7 +398,7 @@ const MagnetismSim = () => {
     const particles = [0, 1, 2, 3, 4].map(i => ({ x: 50 + (t * 60 + i * 80) % 400, y: 100 + 30 * Math.sin(t + i) }));
     return (
         <div className="space-y-6">
-            <div className="relative bg-slate-900 rounded-xl border border-white/5 overflow-hidden aspect-video">
+            <div className="relative bg-slate-900 rounded-xl overflow-hidden aspect-video shadow-lg">
                 <svg viewBox="0 0 400 200" className="w-full h-full">
                     <text x="10" y="25" fill="#94a3b8" fontSize="11">Charged particles in magnetic field B (into page)</text>
                     {[...Array(5)].map((_, i) => <line key={i} x1={i * 80} y1="0" x2={i * 80} y2="200" stroke="#1e293b" strokeWidth="1" />)}
@@ -420,9 +420,9 @@ const ThermodynamicsSim = () => {
     const [t, setT] = useState(300); const p = 1e5 * t / 300;
     return (
         <div className="space-y-6">
-            <div className="relative bg-slate-900 rounded-xl border border-white/5 overflow-hidden aspect-video flex items-center justify-center">
+            <div className="relative bg-slate-900 rounded-xl overflow-hidden aspect-video flex items-center justify-center shadow-lg">
                 <svg viewBox="0 0 400 200" className="w-full h-full">
-                    <rect x="100" y="50" width="200" height="120" rx="8" fill="none" stroke="#64748b" strokeWidth="2" />
+                    <rect x="100" y="50" width="200" height="120" rx="8" fill="none" stroke="#64748b" strokeWidth="1" strokeDasharray="4" />
                     {[...Array(Math.floor(t / 50))].map((_, i) => (
                         <circle key={i} cx={120 + (i % 6) * 30} cy={70 + Math.floor(i / 6) * 30} r="4"
                             fill="#f59e0b" className="animate-pulse" />
@@ -431,7 +431,7 @@ const ThermodynamicsSim = () => {
                     <text x="10" y="185" fill="#f59e0b" fontSize="11">Higher T → faster molecules → higher P</text>
                 </svg>
             </div>
-            <div className="bg-[#111827] p-4 rounded-xl border border-white/5"><input type="range" min="100" max="600" value={t} onChange={e => setT(Number(e.target.value))} className="w-full" /></div>
+            <div className="bg-[#111827] p-4 rounded-xl shadow-sm"><input type="range" min="100" max="600" value={t} onChange={e => setT(Number(e.target.value))} className="w-full" /></div>
             <SolvingMethod title="Thermodynamics" steps={["1st Law: ΔU = Q - W", "2nd Law: ΔS ≥ 0", "PV = nRT (ideal gas)", "Carnot efficiency = 1 - T_cold/T_hot"]} />
         </div>
     );
@@ -442,7 +442,7 @@ const StoichiometrySim = () => {
     const molarMassCO2 = 44; const moles = m / molarMassCO2;
     return (
         <div className="space-y-6">
-            <div className="relative bg-slate-900 rounded-xl border border-white/5 overflow-hidden aspect-video flex items-center justify-center">
+            <div className="relative bg-slate-900 rounded-xl overflow-hidden aspect-video flex items-center justify-center shadow-lg">
                 <svg viewBox="0 0 400 200" className="w-full h-full">
                     <text x="10" y="30" fill="#94a3b8" fontSize="12">Stoichiometry: CO₂ mass → moles</text>
                     <text x="10" y="60" fill="#60a5fa" fontSize="16">m = {m}g</text>
@@ -452,7 +452,7 @@ const StoichiometrySim = () => {
                     <rect x="240" y="40" width={moles * 60} height="30" rx="4" fill="#3b82f650" stroke="#3b82f6" />
                 </svg>
             </div>
-            <div className="bg-[#111827] p-4 rounded-xl border border-white/5">
+            <div className="bg-[#111827] p-4 rounded-xl shadow-sm">
                 <p className="text-xs text-slate-400 mb-1">Mass of CO₂ (g)</p>
                 <input type="range" min="22" max="220" step="22" value={m} onChange={e => setM(Number(e.target.value))} className="w-full" />
             </div>
@@ -466,7 +466,7 @@ const ThermochemistrySim = () => {
     const dG = dH - T * (dS / 1000);
     return (
         <div className="space-y-6">
-            <div className="relative bg-slate-900 rounded-xl border border-white/5 overflow-hidden aspect-video flex items-center justify-center">
+            <div className="relative bg-slate-900 rounded-xl overflow-hidden aspect-video flex items-center justify-center shadow-lg">
                 <svg viewBox="0 0 400 200" className="w-full h-full">
                     <text x="10" y="30" fill="#94a3b8" fontSize="12">Gibbs Free Energy: ΔG = ΔH - TΔS</text>
                     <text x="10" y="60" fill="#60a5fa" fontSize="13">ΔH = {dH} kJ/mol</text>
@@ -479,7 +479,7 @@ const ThermochemistrySim = () => {
                     </text>
                 </svg>
             </div>
-            <div className="grid grid-cols-2 gap-4 bg-[#111827] p-4 rounded-xl border border-white/5">
+            <div className="grid grid-cols-2 gap-4 bg-[#111827] p-4 rounded-xl shadow-sm">
                 <div><p className="text-xs text-slate-400 mb-1">ΔH (kJ/mol)</p><input type="range" min="-200" max="200" value={dH} onChange={e => setDH(Number(e.target.value))} className="w-full" /></div>
                 <div><p className="text-xs text-slate-400 mb-1">ΔS (J/mol·K)</p><input type="range" min="-200" max="300" value={dS} onChange={e => setDS(Number(e.target.value))} className="w-full" /></div>
             </div>
@@ -493,7 +493,7 @@ const EquilibriumSim = () => {
     const dir = qc < Kc ? "→ Forward" : qc > Kc ? "← Reverse" : "⇌ At Equilibrium";
     return (
         <div className="space-y-6">
-            <div className="relative bg-slate-900 rounded-xl border border-white/5 overflow-hidden aspect-video flex items-center justify-center">
+            <div className="relative bg-slate-900 rounded-xl overflow-hidden aspect-video flex items-center justify-center shadow-lg">
                 <svg viewBox="0 0 400 200" className="w-full h-full">
                     <text x="10" y="30" fill="#94a3b8" fontSize="12">Kc = {Kc} | Qc = {qc.toFixed(1)}</text>
                     <rect x="50" y="100" width={qc * 50} height="20" rx="3" fill="#60a5fa80" stroke="#60a5fa" />
@@ -503,7 +503,7 @@ const EquilibriumSim = () => {
                     <text x="10" y="190" fill={qc < Kc ? "#34d399" : qc > Kc ? "#ef4444" : "#f59e0b"} fontSize="14">{dir}</text>
                 </svg>
             </div>
-            <div className="bg-[#111827] p-4 rounded-xl border border-white/5">
+            <div className="bg-[#111827] p-4 rounded-xl shadow-sm">
                 <p className="text-xs text-slate-400 mb-1">Qc value</p>
                 <input type="range" min="0.5" max="10" step="0.1" value={qc} onChange={e => setQc(Number(e.target.value))} className="w-full" />
             </div>
@@ -517,7 +517,7 @@ const ElectrochemistrySim = () => {
     const dG = -n * F * e0;
     return (
         <div className="space-y-6">
-            <div className="relative bg-slate-900 rounded-xl border border-white/5 overflow-hidden aspect-video">
+            <div className="relative bg-slate-900 rounded-xl overflow-hidden aspect-video shadow-lg">
                 <svg viewBox="0 0 400 200" className="w-full h-full">
                     <rect x="50" y="60" width="80" height="100" rx="6" fill="#1e293b" stroke="#3b82f6" strokeWidth="2" />
                     <text x="65" y="115" fill="#60a5fa" fontSize="12">Anode (−)</text>
@@ -529,7 +529,7 @@ const ElectrochemistrySim = () => {
                     <text x="10" y="45" fill="#a78bfa" fontSize="11">ΔG° = {(dG / 1000).toFixed(1)} kJ/mol</text>
                 </svg>
             </div>
-            <div className="bg-[#111827] p-4 rounded-xl border border-white/5">
+            <div className="bg-[#111827] p-4 rounded-xl shadow-sm">
                 <p className="text-xs text-slate-400 mb-1">E°_cell (V)</p>
                 <input type="range" min="-2" max="3" step="0.1" value={e0} onChange={e => setE0(Number(e.target.value))} className="w-full" />
             </div>
@@ -543,7 +543,7 @@ const KineticsSim = () => {
     const times = [0, 1, 2, 4, 6, 8]; const pts = times.map(t => ({ t, c: c0 * Math.exp(-k * t) }));
     return (
         <div className="space-y-6">
-            <div className="relative bg-slate-900 rounded-xl border border-white/5 overflow-hidden aspect-video">
+            <div className="relative bg-slate-900 rounded-xl overflow-hidden aspect-video shadow-lg">
                 <svg viewBox="0 0 400 200" className="w-full h-full">
                     <text x="10" y="24" fill="#94a3b8" fontSize="12">First Order Decay: [A] = [A]₀e^(-kt)</text>
                     <line x1="40" y1="10" x2="40" y2="180" stroke="#475569" strokeWidth="1" />
@@ -553,7 +553,7 @@ const KineticsSim = () => {
                     <text x="10" y="190" fill="#f59e0b" fontSize="11">t½ = {(0.693 / k).toFixed(1)} s</text>
                 </svg>
             </div>
-            <div className="bg-[#111827] p-4 rounded-xl border border-white/5">
+            <div className="bg-[#111827] p-4 rounded-xl shadow-sm">
                 <p className="text-xs text-slate-400 mb-1">k (s⁻¹)</p>
                 <input type="range" min="0.05" max="1" step="0.05" value={k} onChange={e => setK(Number(e.target.value))} className="w-full" />
             </div>
@@ -567,7 +567,7 @@ const CoordGeomSim = () => {
     const pts: string[] = []; for (let x = -5; x <= 5; x++) { pts.push(`${200 + x * 30},${100 - (m * x + c) * 20}`); }
     return (
         <div className="space-y-6">
-            <div className="relative bg-slate-900 rounded-xl border border-white/5 overflow-hidden aspect-video">
+            <div className="relative bg-slate-900 rounded-xl overflow-hidden aspect-video shadow-lg">
                 <svg viewBox="0 0 400 200" className="w-full h-full">
                     <line x1="20" y1="100" x2="380" y2="100" stroke="#334155" strokeWidth="1" />
                     <line x1="200" y1="10" x2="200" y2="190" stroke="#334155" strokeWidth="1" />
@@ -576,7 +576,7 @@ const CoordGeomSim = () => {
                     <circle cx="200" cy={100 - c * 20} r="5" fill="#f59e0b" />
                 </svg>
             </div>
-            <div className="grid grid-cols-2 gap-4 bg-[#111827] p-4 rounded-xl border border-white/5">
+            <div className="grid grid-cols-2 gap-4 bg-[#111827] p-4 rounded-xl shadow-sm">
                 <div><p className="text-xs text-slate-400 mb-1">Slope (m)</p><input type="range" min="-4" max="4" step="0.5" value={m} onChange={e => setM(Number(e.target.value))} className="w-full" /></div>
                 <div><p className="text-xs text-slate-400 mb-1">Intercept (c)</p><input type="range" min="-3" max="3" step="0.5" value={c} onChange={e => setC(Number(e.target.value))} className="w-full" /></div>
             </div>
@@ -590,7 +590,7 @@ const MatricesSim = () => {
     const det = a11 * a22 - a12 * a21;
     return (
         <div className="space-y-6">
-            <div className="relative bg-slate-900 rounded-xl border border-white/5 overflow-hidden aspect-video flex items-center justify-center">
+            <div className="relative bg-slate-900 rounded-xl overflow-hidden aspect-video flex items-center justify-center shadow-lg">
                 <svg viewBox="0 0 400 200" className="w-full h-full">
                     <text x="10" y="30" fill="#94a3b8" fontSize="12">2×2 Matrix Properties</text>
                     <rect x="80" y="50" width="120" height="80" rx="4" fill="none" stroke="#3b82f6" strokeWidth="2" />
@@ -603,7 +603,7 @@ const MatricesSim = () => {
                     <text x="230" y="120" fill={det !== 0 ? "#34d399" : "#ef4444"} fontSize="11">{det !== 0 ? "Invertible ✓" : "Singular ✗"}</text>
                 </svg>
             </div>
-            <div className="grid grid-cols-2 gap-3 bg-[#111827] p-4 rounded-xl border border-white/5">
+            <div className="grid grid-cols-2 gap-3 bg-[#111827] p-4 rounded-xl shadow-sm">
                 {[['a', a11, setA11], ['b', a12, setA12], ['c', a21, setA21], ['d', a22, setA22]].map(([label, val, setter]: any, i) => (
                     <div key={i}><p className="text-xs text-slate-400 mb-1">{label}</p><input type="range" min="-5" max="5" value={val} onChange={e => setter(Number(e.target.value))} className="w-full" /></div>
                 ))}
@@ -618,7 +618,7 @@ const DiffEqSim = () => {
     const pts: string[] = []; for (let t = 0; t <= 10; t += 0.5) pts.push(`${30 + t * 33},${180 - Math.exp(k * t) * 130}`);
     return (
         <div className="space-y-6">
-            <div className="relative bg-slate-900 rounded-xl border border-white/5 overflow-hidden aspect-video">
+            <div className="relative bg-slate-900 rounded-xl overflow-hidden aspect-video shadow-lg">
                 <svg viewBox="0 0 400 200" className="w-full h-full">
                     <text x="10" y="24" fill="#94a3b8" fontSize="12">Solution of dy/dt = ky: y = {k >= 0 ? 'eᵏᵗ' : 'e⁻ᵏᵗ'}</text>
                     <line x1="30" y1="10" x2="30" y2="185" stroke="#475569" strokeWidth="1" />
@@ -627,7 +627,7 @@ const DiffEqSim = () => {
                     <text x="10" y="190" fill="#94a3b8" fontSize="11">k = {k.toFixed(1)}</text>
                 </svg>
             </div>
-            <div className="bg-[#111827] p-4 rounded-xl border border-white/5">
+            <div className="bg-[#111827] p-4 rounded-xl shadow-sm">
                 <p className="text-xs text-slate-400 mb-1">k (growth/decay rate)</p>
                 <input type="range" min="-1" max="1" step="0.1" value={k} onChange={e => setK(Number(e.target.value))} className="w-full" />
             </div>
@@ -642,7 +642,7 @@ const ComplexNumbersSim = () => {
     const re = (r * Math.cos(rad)).toFixed(2); const im = (r * Math.sin(rad)).toFixed(2);
     return (
         <div className="space-y-6">
-            <div className="relative bg-slate-900 rounded-xl border border-white/5 overflow-hidden aspect-video flex items-center justify-center">
+            <div className="relative bg-slate-900 rounded-xl overflow-hidden aspect-video flex items-center justify-center shadow-lg">
                 <svg viewBox="0 0 300 200" className="w-full h-full">
                     <line x1="150" y1="10" x2="150" y2="190" stroke="#334155" strokeWidth="1" />
                     <line x1="10" y1="100" x2="290" y2="100" stroke="#334155" strokeWidth="1" />
@@ -654,7 +654,7 @@ const ComplexNumbersSim = () => {
                     <text x="10" y="40" fill="#f59e0b" fontSize="11">|z| = {r} | θ = {theta}°</text>
                 </svg>
             </div>
-            <div className="grid grid-cols-2 gap-4 bg-[#111827] p-4 rounded-xl border border-white/5">
+            <div className="grid grid-cols-2 gap-4 bg-[#111827] p-4 rounded-xl shadow-sm">
                 <div><p className="text-xs text-slate-400 mb-1">r (modulus)</p><input type="range" min="1" max="5" value={r} onChange={e => setR(Number(e.target.value))} className="w-full" /></div>
                 <div><p className="text-xs text-slate-400 mb-1">θ (argument °)</p><input type="range" min="0" max="360" value={theta} onChange={e => setTheta(Number(e.target.value))} className="w-full" /></div>
             </div>
@@ -669,7 +669,7 @@ const SequencesSim = () => {
     const gp = Array.from({ length: n }, (_, i) => a * Math.pow(1.5, i));
     return (
         <div className="space-y-6">
-            <div className="relative bg-slate-900 rounded-xl border border-white/5 overflow-hidden aspect-video">
+            <div className="relative bg-slate-900 rounded-xl overflow-hidden aspect-video shadow-lg">
                 <svg viewBox="0 0 400 200" className="w-full h-full">
                     <text x="10" y="24" fill="#94a3b8" fontSize="12">AP vs GP comparison</text>
                     {ap.map((v, i) => <rect key={i} x={20 + i * 44} y={180 - Math.min(v, 60) * 2} width="16" height={Math.min(v, 60) * 2} rx="2" fill="#60a5fa80" stroke="#60a5fa" />)}
@@ -680,7 +680,7 @@ const SequencesSim = () => {
                     <text x="95" y="185" fill="#f59e0b" fontSize="11">GP (r=1.5)</text>
                 </svg>
             </div>
-            <div className="grid grid-cols-2 gap-4 bg-[#111827] p-4 rounded-xl border border-white/5">
+            <div className="grid grid-cols-2 gap-4 bg-[#111827] p-4 rounded-xl shadow-sm">
                 <div><p className="text-xs text-slate-400 mb-1">a (first term)</p><input type="range" min="1" max="10" value={a} onChange={e => setA(Number(e.target.value))} className="w-full" /></div>
                 <div><p className="text-xs text-slate-400 mb-1">d (AP common diff)</p><input type="range" min="1" max="8" value={r} onChange={e => setR(Number(e.target.value))} className="w-full" /></div>
             </div>
@@ -693,7 +693,7 @@ const CellSimulator = () => {
     const [cellType, setCellType] = useState<'Animal' | 'Plant'>('Animal');
     return (
         <div className="space-y-6">
-            <div className="relative bg-slate-900 rounded-xl border border-white/5 overflow-hidden aspect-video flex items-center justify-center p-4">
+            <div className="relative bg-slate-900 rounded-xl overflow-hidden aspect-video flex items-center justify-center p-4 shadow-lg">
                 <svg viewBox="0 0 400 300" className="w-full max-w-[400px]">
                     {/* Cell Wall / Membrane */}
                     {cellType === 'Plant' ? (
@@ -741,8 +741,8 @@ const CellSimulator = () => {
                 </svg>
             </div>
             <div className="flex justify-center space-x-4">
-                <button onClick={() => setCellType('Animal')} className={`px-4 py-2 rounded-lg text-sm font-bold border transition-all ${cellType === 'Animal' ? 'bg-blue-600 border-blue-500 text-white' : 'bg-slate-800 border-white/5 text-slate-400'}`}>Animal Cell</button>
-                <button onClick={() => setCellType('Plant')} className={`px-4 py-2 rounded-lg text-sm font-bold border transition-all ${cellType === 'Plant' ? 'bg-emerald-600 border-emerald-500 text-white' : 'bg-slate-800 border-white/5 text-slate-400'}`}>Plant Cell</button>
+                <button onClick={() => setCellType('Animal')} className={`px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm ${cellType === 'Animal' ? 'bg-blue-600 text-white' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}>Animal Cell</button>
+                <button onClick={() => setCellType('Plant')} className={`px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm ${cellType === 'Plant' ? 'bg-emerald-600 text-white' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}>Plant Cell</button>
             </div>
             <SolvingMethod title="Cell Biology" steps={["Identify organelles and their unique functions", "Note differences: Plant cells have walls and chloroplasts", "SA:V ratio limits cell size", "ATP production happens in mitochondria"]} />
         </div>
@@ -756,24 +756,24 @@ const GeneticsSim = () => {
     const alleles2 = p2.split('');
     return (
         <div className="space-y-6">
-            <div className="relative bg-slate-900 rounded-xl border border-white/5 overflow-hidden aspect-video flex items-center justify-center">
-                <div className="grid grid-cols-3 gap-2 p-6 bg-slate-800/50 rounded-2xl border border-white/10">
+            <div className="relative bg-slate-900 rounded-xl overflow-hidden aspect-video flex items-center justify-center shadow-lg">
+                <div className="grid grid-cols-3 gap-2 p-6 bg-slate-800/50 rounded-2xl shadow-xl">
                     <div />
                     <div className="flex items-center justify-center font-bold text-blue-400">{alleles1[0]}</div>
                     <div className="flex items-center justify-center font-bold text-blue-400">{alleles1[1]}</div>
                     <div className="flex items-center justify-center font-bold text-rose-400">{alleles2[0]}</div>
-                    <div className="w-12 h-12 flex items-center justify-center bg-slate-900 border border-white/5 rounded-lg text-white font-mono">{alleles2[0]}{alleles1[0]}</div>
-                    <div className="w-12 h-12 flex items-center justify-center bg-slate-900 border border-white/5 rounded-lg text-white font-mono">{alleles2[0]}{alleles1[1]}</div>
+                    <div className="w-12 h-12 flex items-center justify-center bg-slate-900 rounded-lg text-white font-mono shadow-inner">{alleles2[0]}{alleles1[0]}</div>
+                    <div className="w-12 h-12 flex items-center justify-center bg-slate-900 rounded-lg text-white font-mono shadow-inner">{alleles2[0]}{alleles1[1]}</div>
                     <div className="flex items-center justify-center font-bold text-rose-400">{alleles2[1]}</div>
-                    <div className="w-12 h-12 flex items-center justify-center bg-slate-900 border border-white/5 rounded-lg text-white font-mono">{alleles2[1]}{alleles1[0]}</div>
-                    <div className="w-12 h-12 flex items-center justify-center bg-slate-900 border border-white/5 rounded-lg text-white font-mono">{alleles2[1]}{alleles1[1]}</div>
+                    <div className="w-12 h-12 flex items-center justify-center bg-slate-900 rounded-lg text-white font-mono shadow-inner">{alleles2[1]}{alleles1[0]}</div>
+                    <div className="w-12 h-12 flex items-center justify-center bg-slate-900 rounded-lg text-white font-mono shadow-inner">{alleles2[1]}{alleles1[1]}</div>
                 </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
-                <select value={p1} onChange={e => setP1(e.target.value)} className="bg-slate-900 border border-white/5 p-2 rounded-lg text-white text-xs">
+                <select value={p1} onChange={e => setP1(e.target.value)} className="bg-slate-900 p-2 rounded-lg text-white text-xs shadow-sm focus:ring-1 focus:ring-blue-500 outline-none">
                     <option value="AA">Parent 1: AA</option><option value="Aa">Parent 1: Aa</option><option value="aa">Parent 1: aa</option>
                 </select>
-                <select value={p2} onChange={e => setP2(e.target.value)} className="bg-slate-900 border border-white/5 p-2 rounded-lg text-white text-xs">
+                <select value={p2} onChange={e => setP2(e.target.value)} className="bg-slate-900 p-2 rounded-lg text-white text-xs shadow-sm focus:ring-1 focus:ring-blue-500 outline-none">
                     <option value="AA">Parent 2: AA</option><option value="Aa">Parent 2: Aa</option><option value="aa">Parent 2: aa</option>
                 </select>
             </div>
@@ -788,7 +788,7 @@ const PhysiologySim = () => {
     const co = (hr * sv) / 1000;
     return (
         <div className="space-y-6">
-            <div className="relative bg-slate-900 rounded-xl border border-white/5 overflow-hidden aspect-video flex flex-col items-center justify-center p-6 text-center">
+            <div className="relative bg-slate-900 rounded-xl overflow-hidden aspect-video flex flex-col items-center justify-center p-6 text-center shadow-lg">
                 <div className="relative mb-4">
                     <Heart className={`w-20 h-20 text-rose-500 transition-transform duration-200`} style={{ transform: `scale(${1 + Math.sin(Date.now() / 100) * 0.1})` }} />
                     <Activity className="absolute inset-x-0 -bottom-4 w-full h-8 text-blue-400" />

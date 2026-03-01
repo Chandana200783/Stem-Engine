@@ -176,8 +176,22 @@ export const ProblemSolver: React.FC<ProblemSolverProps> = ({ onAddPyq, language
         setPyqSaved(false);
 
         try {
-            // Primarily use OpenAI Backend for solving
-            const result = await solveWithAI(problemText, subject, expLevel, language);
+            const provider = localStorage.getItem('ai_provider') || 'huggingface';
+            let result = await solveWithAI(problemText, subject, expLevel, language, provider);
+
+            // If AI failed or returned an empty successful result, try local fallback
+            if (!result.success || (!result.steps && !result.final_answer && !result.final_values)) {
+                console.log("[AI] Falling back to local symbolic solver...");
+                try {
+                    const localRes = await solveEquation(problemText, undefined, undefined, expLevel);
+                    if (localRes.success) {
+                        result = localRes;
+                    }
+                } catch (localErr) {
+                    console.error("Local solver fallback failed:", localErr);
+                }
+            }
+
             setSolveResult(result);
             if (result.success && onSolveSuccess) onSolveSuccess();
 
@@ -188,9 +202,12 @@ export const ProblemSolver: React.FC<ProblemSolverProps> = ({ onAddPyq, language
                     setPlotData(plotRes);
                 } catch { /* plotting optional */ }
             }
-        } catch (err) {
+        } catch (err: any) {
             console.error("Solve error:", err);
-            setSolveResult({ success: false, error: 'AI Solver encountered an error. Please check your Firebase settings or try again.' });
+            setSolveResult({
+                success: false,
+                error: err.message || 'AI Solver encountered an error. Ensure the local Python backend is running on port 8000.'
+            });
         } finally {
             setIsSolving(false);
             setIsPlotting(false);
@@ -349,9 +366,17 @@ export const ProblemSolver: React.FC<ProblemSolverProps> = ({ onAddPyq, language
 
         try {
             const result = await scanImage(file);
+            console.log("OCR Result:", result);
             if (result.success) {
+                // Determine the best text to show
+                const textToShow = result.questions && result.questions.length > 0
+                    ? result.questions[0]
+                    : (result.text || "No text detected in image.");
+
+                setProblemText(textToShow);
+
                 if (result.is_paper && result.questions.length > 1) {
-                    // Question Paper: Add to PYQs
+                    // Also add all to bank if multiple
                     if (onAddPyq) {
                         result.questions.forEach((q: string) => {
                             onAddPyq({
@@ -362,17 +387,13 @@ export const ProblemSolver: React.FC<ProblemSolverProps> = ({ onAddPyq, language
                             });
                         });
                         alert(`Extracted ${result.questions.length} questions and added them to your PYQ Bank!`);
-                    } else {
-                        setProblemText(result.text);
                     }
-                } else {
-                    // Single problem: Put in text area
-                    setProblemText(result.questions[0] || result.text);
                 }
             } else {
                 setScanError(result.error || 'Failed to scan image.');
             }
         } catch (err) {
+            console.error("OCR Error:", err);
             setScanError('An error occurred during scanning. Make sure the backend server is running with OCR support.');
         } finally {
             setIsScanning(false);
@@ -405,7 +426,7 @@ export const ProblemSolver: React.FC<ProblemSolverProps> = ({ onAddPyq, language
                             key={s.id}
                             onClick={() => setSubject(s.id)}
                             className={`flex items-center space-x-2 px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 ${isActive
-                                ? 'bg-blue-600/20 text-white shadow-sm'
+                                ? 'bg-blue-600/30 text-white shadow-md'
                                 : 'bg-brand-surface text-brand-muted hover:text-white'
                                 }`}
                         >
@@ -422,7 +443,7 @@ export const ProblemSolver: React.FC<ProblemSolverProps> = ({ onAddPyq, language
                 <button
                     onClick={() => setHintMode(!hintMode)}
                     className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${hintMode
-                        ? 'bg-yellow-900/20 text-yellow-400 shadow-sm'
+                        ? 'bg-yellow-900/30 text-yellow-400 shadow-md'
                         : 'bg-brand-surface text-brand-muted hover:text-white'
                         }`}
                 >
@@ -432,7 +453,7 @@ export const ProblemSolver: React.FC<ProblemSolverProps> = ({ onAddPyq, language
                 <div className="flex items-center space-x-2">
                     <button
                         onClick={() => setShowCheatSheet(true)}
-                        className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600/30 shadow-sm"
+                        className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600/30 shadow-md"
                     >
                         <FileText className="w-3.5 h-3.5" />
                         <span>Cheat Sheet</span>
@@ -450,7 +471,7 @@ export const ProblemSolver: React.FC<ProblemSolverProps> = ({ onAddPyq, language
                     <button
                         onClick={() => setShowCalculator(!showCalculator)}
                         className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${showCalculator
-                            ? 'bg-blue-600/20 text-blue-400 shadow-sm'
+                            ? 'bg-blue-600/30 text-blue-400 shadow-md'
                             : 'bg-brand-surface text-brand-muted hover:text-white'
                             }`}
                     >
@@ -466,12 +487,12 @@ export const ProblemSolver: React.FC<ProblemSolverProps> = ({ onAddPyq, language
                     value={problemText}
                     onChange={e => setProblemText(e.target.value)}
                     placeholder={t.solver.placeholder}
-                    className="w-full h-44 bg-[#0b1121] rounded-2xl p-6 text-white placeholder-brand-muted/40 focus:outline-none focus:ring-1 focus:ring-brand-accent transition-all text-sm resize-none custom-scrollbar shadow-inner"
+                    className="w-full h-44 bg-[#0b1121] rounded-2xl p-6 text-white placeholder-brand-muted/40 focus:outline-none transition-all text-sm resize-none custom-scrollbar shadow-[inset_0_2px_10px_rgba(0,0,0,0.3)]"
                 />
             </form>
 
             {scanError && (
-                <div className="mb-4 p-3 bg-red-900/20 rounded-xl text-red-400 text-xs flex items-center space-x-2 animate-in fade-in slide-in-from-top-2 shadow-sm">
+                <div className="mb-4 p-3 bg-red-900/20 rounded-xl text-red-400 text-xs flex items-center space-x-2 animate-in fade-in slide-in-from-top-2 shadow-md">
                     <X className="w-3.5 h-3.5 cursor-pointer" onClick={() => setScanError(null)} />
                     <span>{scanError}</span>
                 </div>
@@ -498,7 +519,7 @@ export const ProblemSolver: React.FC<ProblemSolverProps> = ({ onAddPyq, language
                     </h3>
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                         {detectedVars.map(v => (
-                            <div key={v} className={`relative group p-3 rounded-xl transition-all shadow-sm ${solveFor === v ? 'bg-blue-600/10 ring-1 ring-blue-500/30' : 'bg-brand-surface'}`}>
+                            <div key={v} className={`relative group p-3 rounded-xl transition-all shadow-md ${solveFor === v ? 'bg-blue-600/15' : 'bg-brand-surface'}`}>
                                 <div className="flex justify-between items-center mb-2">
                                     <label className="text-xs font-bold text-brand-muted uppercase tracking-wider">{v}</label>
                                     <button
@@ -542,9 +563,9 @@ export const ProblemSolver: React.FC<ProblemSolverProps> = ({ onAddPyq, language
                 <div className="mb-6">
                     <button
                         onClick={() => setShowCircuitSolver(v => !v)}
-                        className={`w-full flex items-center justify-between px-4 py-3 rounded-xl border transition-all ${showCircuitSolver
-                            ? 'bg-blue-900/20 border-blue-500/40 text-white'
-                            : 'bg-[#0f172a] border-blue-900/30 text-brand-muted hover:text-white hover:border-blue-500/30'
+                        className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all ${showCircuitSolver
+                            ? 'bg-blue-900/25 text-white shadow-lg'
+                            : 'bg-[#0f172a] text-brand-muted hover:text-white hover:bg-brand-surface/50'
                             }`}
                     >
                         <div className="flex items-center justify-between mb-8">
@@ -558,9 +579,9 @@ export const ProblemSolver: React.FC<ProblemSolverProps> = ({ onAddPyq, language
                     </button>
 
                     {showCircuitSolver && (
-                        <div className="mt-2 p-5 bg-[#0f172a] border border-blue-900/40 rounded-2xl animate-in slide-in-from-top-2 duration-200">
+                        <div className="mt-2 p-5 bg-[#0f172a] rounded-2xl animate-in slide-in-from-top-2 duration-200 shadow-xl">
                             <div className="flex flex-wrap gap-4 mb-4">
-                                <div className="flex items-center space-x-2 bg-[#0b1121] p-1 rounded-lg border border-brand-muted/20">
+                                <div className="flex items-center space-x-2 bg-[#0b1121] p-1 rounded-lg">
                                     {(['Series', 'Parallel'] as const).map(type => (
                                         <button
                                             key={type}
@@ -576,25 +597,25 @@ export const ProblemSolver: React.FC<ProblemSolverProps> = ({ onAddPyq, language
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
                                 <div>
                                     <label className="block text-xs font-semibold text-brand-muted mb-1.5 uppercase tracking-wider">Voltage (V)</label>
-                                    <input type="number" value={circuitVoltage} onChange={e => setCircuitVoltage(e.target.value)} placeholder="e.g. 12" className="w-full bg-[#0b1121] border border-brand-muted/20 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-blue-500/50" />
+                                    <input type="number" value={circuitVoltage} onChange={e => setCircuitVoltage(e.target.value)} placeholder="e.g. 12" className="w-full bg-[#0b1121] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-blue-500/50 shadow-inner" />
                                 </div>
                                 <div>
                                     <label className="block text-xs font-semibold text-brand-muted mb-1.5 uppercase tracking-wider">R1 (Ω)</label>
-                                    <input type="number" value={circuitResistance1} onChange={e => setCircuitResistance1(e.target.value)} placeholder="e.g. 4" className="w-full bg-[#0b1121] border border-brand-muted/20 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-blue-500/50" />
+                                    <input type="number" value={circuitResistance1} onChange={e => setCircuitResistance1(e.target.value)} placeholder="e.g. 4" className="w-full bg-[#0b1121] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-blue-500/50 shadow-inner" />
                                 </div>
                                 <div>
                                     <label className="block text-xs font-semibold text-brand-muted mb-1.5 uppercase tracking-wider">R2 (Ω)</label>
-                                    <input type="number" value={circuitResistance2} onChange={e => setCircuitResistance2(e.target.value)} placeholder="e.g. 6" className="w-full bg-[#0b1121] border border-brand-muted/20 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-blue-500/50" />
+                                    <input type="number" value={circuitResistance2} onChange={e => setCircuitResistance2(e.target.value)} placeholder="e.g. 6" className="w-full bg-[#0b1121] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-blue-500/50 shadow-inner" />
                                 </div>
                             </div>
 
-                            <button onClick={handleSolveCircuit} className="w-full sm:w-auto px-6 py-2 bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/40 text-blue-400 font-semibold text-sm rounded-lg transition-colors flex items-center justify-center space-x-2">
+                            <button onClick={handleSolveCircuit} className="w-full sm:w-auto px-6 py-2 bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 font-semibold text-sm rounded-lg transition-colors flex items-center justify-center space-x-2 shadow-sm">
                                 <Zap className="w-4 h-4" />
                                 <span>Calculate Circuit</span>
                             </button>
 
                             {(circuitVoltage && circuitResistance1 && circuitResistance2) && (
-                                <div className="mt-4 p-4 border border-dashed border-brand-muted/20 rounded-xl bg-[#0b1121] flex flex-col items-center justify-center italic text-brand-muted text-xs">
+                                <div className="mt-4 p-4 border border-dashed border-blue-500/10 rounded-xl bg-[#0b1121] flex flex-col items-center justify-center italic text-brand-muted text-xs">
                                     <span className="mb-2 font-mono text-blue-400 not-italic border border-blue-500/20 p-2 rounded-lg bg-blue-900/10">
                                         {circuitType === 'Series'
                                             ? `[+]--(${circuitVoltage}V)--[R1:${circuitResistance1}Ω]--[R2:${circuitResistance2}Ω]--[-]`
@@ -613,9 +634,9 @@ export const ProblemSolver: React.FC<ProblemSolverProps> = ({ onAddPyq, language
                 <div className="mb-6">
                     <button
                         onClick={() => setShowOrganicSolver(v => !v)}
-                        className={`w-full flex items-center justify-between px-4 py-3 rounded-xl border transition-all ${showOrganicSolver
-                            ? 'bg-emerald-900/20 border-emerald-500/40 text-white'
-                            : 'bg-[#0f172a] border-emerald-900/30 text-brand-muted hover:text-white hover:border-emerald-500/30'
+                        className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all ${showOrganicSolver
+                            ? 'bg-emerald-900/25 text-white shadow-lg'
+                            : 'bg-[#0f172a] text-brand-muted hover:text-white hover:bg-brand-surface/50'
                             }`}
                     >
                         <div className="flex items-center space-x-2">
@@ -627,11 +648,11 @@ export const ProblemSolver: React.FC<ProblemSolverProps> = ({ onAddPyq, language
                     </button>
 
                     {showOrganicSolver && (
-                        <div className="mt-2 p-5 bg-[#0f172a] border border-emerald-900/40 rounded-2xl animate-in slide-in-from-top-2 duration-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <div className="mt-2 p-5 bg-[#0f172a] rounded-2xl animate-in slide-in-from-top-2 duration-200 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xl">
                             <p className="text-xs text-brand-muted">Type your organic chemistry problem in the box above (e.g. &quot;Name CH3-CH2-OH&quot; or &quot;Reaction of benzene and Br2&quot;), then click Solve Organic.</p>
                             <button
                                 onClick={handleSolveOrganic}
-                                className="w-full sm:w-auto px-6 py-2.5 bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/40 text-emerald-400 font-semibold text-sm rounded-lg transition-colors flex items-center justify-center space-x-2 shrink-0"
+                                className="w-full sm:w-auto px-6 py-2.5 bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 font-semibold text-sm rounded-lg transition-colors flex items-center justify-center space-x-2 shrink-0 shadow-sm"
                             >
                                 <Shell className="w-4 h-4" />
                                 <span>Solve Organic</span>
@@ -651,9 +672,9 @@ export const ProblemSolver: React.FC<ProblemSolverProps> = ({ onAddPyq, language
                         <button
                             key={lvl.id}
                             onClick={() => setExpLevel(lvl.id)}
-                            className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-sm border transition-all ${isActive
-                                ? 'bg-[#1e293b] border-blue-500/30 text-white'
-                                : 'bg-brand-surface border-brand-muted/10 text-brand-muted hover:text-white'
+                            className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-sm transition-all ${isActive
+                                ? 'bg-[#1e293b] text-white shadow-md'
+                                : 'bg-brand-surface text-brand-muted hover:text-white'
                                 }`}
                         >
                             <Icon className={`w-4 h-4 ${isActive ? 'text-blue-400' : 'text-brand-muted'}`} />
@@ -668,9 +689,9 @@ export const ProblemSolver: React.FC<ProblemSolverProps> = ({ onAddPyq, language
                 <button
                     type="button"
                     onClick={() => { setMarkAsPyq(!markAsPyq); setPyqSaved(false); }}
-                    className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all border ${markAsPyq
-                        ? 'bg-red-600/20 border-red-500/40 text-red-400'
-                        : 'bg-brand-surface border-brand-muted/20 text-brand-muted hover:text-white'
+                    className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${markAsPyq
+                        ? 'bg-red-600/25 text-red-400 shadow-md'
+                        : 'bg-brand-surface text-brand-muted hover:text-white'
                         }`}
                 >
                     <BookMarked className="w-4 h-4" />
@@ -693,17 +714,17 @@ export const ProblemSolver: React.FC<ProblemSolverProps> = ({ onAddPyq, language
                         value={pyqExam}
                         onChange={e => setPyqExam(e.target.value)}
                         placeholder="Exam (e.g. JEE 2023)"
-                        className="flex-1 min-w-[180px] bg-[#0b1121] border border-brand-muted/20 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-1 focus:ring-blue-500/50 placeholder-brand-muted/40"
+                        className="flex-1 min-w-[180px] bg-[#0b1121] rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-1 focus:ring-blue-500/50 placeholder-brand-muted/40 shadow-inner"
                     />
                     <input
                         value={pyqYear}
                         onChange={e => setPyqYear(e.target.value)}
                         placeholder="Year (e.g. 2025)"
-                        className="w-40 bg-[#0b1121] border border-brand-muted/20 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-1 focus:ring-blue-500/50 placeholder-brand-muted/40"
+                        className="w-40 bg-[#0b1121] rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-1 focus:ring-blue-500/50 placeholder-brand-muted/40 shadow-inner"
                     />
                     {onAddPyq && (
                         pyqSaved ? (
-                            <span className="flex items-center space-x-2 bg-emerald-600/20 border border-emerald-500/30 text-emerald-400 px-4 py-2.5 rounded-xl text-sm font-medium">
+                            <span className="flex items-center space-x-2 bg-emerald-600/20 text-emerald-400 px-4 py-2.5 rounded-xl text-sm font-medium shadow-sm">
                                 <BookMarked className="w-4 h-4" />
                                 <span>Saved to PYQ Bank ✓</span>
                             </span>
@@ -750,7 +771,7 @@ export const ProblemSolver: React.FC<ProblemSolverProps> = ({ onAddPyq, language
                 <button
                     type="button"
                     onClick={handleNewProblem}
-                    className="flex items-center space-x-2 bg-brand-surface hover:bg-brand-surface/80 border border-brand-muted/20 text-brand-muted hover:text-white px-5 py-2.5 rounded-xl font-semibold text-sm transition-colors"
+                    className="flex items-center space-x-2 bg-brand-surface hover:bg-brand-surface/80 text-brand-muted hover:text-white px-5 py-2.5 rounded-xl font-semibold text-sm transition-colors shadow-sm"
                 >
                     <RefreshCw className="w-4 h-4" />
                     <span>New Problem</span>
@@ -759,7 +780,7 @@ export const ProblemSolver: React.FC<ProblemSolverProps> = ({ onAddPyq, language
 
             {/* Solution Panel */}
             {(solveResult || isSolving) && (
-                <div className="border-t border-brand-muted/10 pt-8">
+                <div className="shadow-[0_-1px_0_0_rgba(255,255,255,0.03)] pt-8">
                     <div className="flex items-center justify-between mb-5">
                         <h3 className="text-sm font-bold text-white uppercase tracking-widest flex items-center space-x-2">
                             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse inline-block"></span>

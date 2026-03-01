@@ -744,9 +744,9 @@ export const Concepts: React.FC<ConceptsProps> = ({ onUseFormula, language, onTo
                                     setActiveSubject(name);
                                     setActiveTopic(data.topics[0].id);
                                 }}
-                                className={`flex flex-col items-center justify-center space-y-1.5 p-3 rounded-xl text-xs border transition-all duration-200 ${isActive
-                                    ? c.active + ' shadow-sm'
-                                    : 'bg-brand-surface border-brand-muted/10 text-brand-muted hover:text-white'
+                                className={`flex flex-col items-center justify-center space-y-1.5 p-3 rounded-xl text-xs transition-all duration-200 ${isActive
+                                    ? c.active + ' shadow-md'
+                                    : 'bg-brand-surface text-brand-muted hover:text-white shadow-sm'
                                     }`}
                             >
                                 <Icon className={`w-4 h-4 ${isActive ? c.icon : 'text-brand-muted'}`} />
@@ -764,7 +764,7 @@ export const Concepts: React.FC<ConceptsProps> = ({ onUseFormula, language, onTo
                         placeholder={t.concepts.search}
                         value={searchQuery}
                         onChange={e => setSearchQuery(e.target.value)}
-                        className="w-full bg-[#0b1121] border border-brand-muted/20 rounded-xl py-2.5 pl-10 pr-4 text-sm text-white focus:outline-none focus:ring-1 focus:ring-brand-accent placeholder-brand-muted/50"
+                        className="w-full bg-[#0b1121] rounded-xl py-2.5 pl-10 pr-4 text-sm text-white focus:outline-none focus:ring-1 focus:ring-brand-accent placeholder-brand-muted/50 shadow-inner"
                     />
                 </div>
 
@@ -779,9 +779,9 @@ export const Concepts: React.FC<ConceptsProps> = ({ onUseFormula, language, onTo
                                 <button
                                     key={topic.id}
                                     onClick={() => setActiveTopic(topic.id)}
-                                    className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all border text-left ${isActive
-                                        ? colors.topicActive + ' border shadow-sm'
-                                        : 'text-brand-muted hover:bg-brand-surface/50 hover:text-white border-transparent'
+                                    className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all text-left ${isActive
+                                        ? colors.topicActive + ' shadow-md'
+                                        : 'text-brand-muted hover:bg-brand-surface/50 hover:text-white'
                                         }`}
                                 >
                                     <div className="flex items-center space-x-3">

@@ -88,7 +88,7 @@ export const Practice: React.FC<{ onSolveProblem?: (problem: string) => void; la
                             <h2 className="text-2xl font-bold text-white mb-2">Exam Results</h2>
                             <p className="text-brand-muted">You scored {score} out of {currentQuestions.length}</p>
                         </div>
-                        <button onClick={handleReset} className="flex items-center space-x-2 bg-brand-surface hover:bg-brand-surface/80 border border-brand-muted/20 px-4 py-2 rounded-xl text-white transition-all">
+                        <button onClick={handleReset} className="flex items-center space-x-2 bg-brand-surface hover:bg-brand-surface/80 px-4 py-2 rounded-xl text-white transition-all shadow-md">
                             <RefreshCcw className="w-4 h-4" />
                             <span>New Session</span>
                         </button>
@@ -99,7 +99,7 @@ export const Practice: React.FC<{ onSolveProblem?: (problem: string) => void; la
                             const isCorrect = userAnswers[q.id] === q.correctAnswer;
                             const isUnanswered = !userAnswers[q.id];
                             return (
-                                <div key={q.id} className={`p-6 bg-brand-surface rounded-2xl border ${isCorrect ? 'border-green-500/30' : 'border-red-500/30'}`}>
+                                <div key={q.id} className={`p-6 bg-brand-surface rounded-2xl ${isCorrect ? 'shadow-[0_0_20px_rgba(34,197,94,0.05)]' : 'shadow-[0_0_20px_rgba(239,68,68,0.05)]'}`}>
                                     <div className="flex space-x-3 items-start mb-4">
                                         <div className="mt-1">
                                             {isCorrect ? <CheckCircle2 className="text-green-400 w-5 h-5" /> : <XCircle className="text-red-400 w-5 h-5" />}
@@ -111,12 +111,12 @@ export const Practice: React.FC<{ onSolveProblem?: (problem: string) => void; la
 
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pl-8 mb-4">
                                         {q.options.map((opt, i) => {
-                                            let bg = 'bg-brand-background border-brand-muted/10 text-brand-muted';
-                                            if (opt === q.correctAnswer) bg = 'bg-green-500/10 border-green-500/30 text-green-300';
-                                            else if (opt === userAnswers[q.id] && !isCorrect) bg = 'bg-red-500/10 border-red-500/30 text-red-300';
+                                            let bg = 'bg-brand-background text-brand-muted';
+                                            if (opt === q.correctAnswer) bg = 'bg-green-500/10 text-green-300';
+                                            else if (opt === userAnswers[q.id] && !isCorrect) bg = 'bg-red-500/10 text-red-300';
 
                                             return (
-                                                <div key={i} className={`px-4 py-3 rounded-xl border ${bg} transition-colors`}>
+                                                <div key={i} className={`px-4 py-3 rounded-xl ${bg} transition-colors`}>
                                                     {opt}
                                                 </div>
                                             );
@@ -125,7 +125,7 @@ export const Practice: React.FC<{ onSolveProblem?: (problem: string) => void; la
 
                                     {!isCorrect && (
                                         <div className="pl-8">
-                                            <div className="px-4 py-3 bg-blue-900/20 border border-blue-500/20 rounded-xl">
+                                            <div className="px-4 py-3 bg-blue-900/20 rounded-xl">
                                                 <p className="text-xs text-blue-300/70 font-semibold mb-1 uppercase tracking-wider">Explanation</p>
                                                 <p className="text-sm text-blue-100">{q.explanation}</p>
                                             </div>
@@ -144,7 +144,7 @@ export const Practice: React.FC<{ onSolveProblem?: (problem: string) => void; la
 
         return (
             <div className="flex flex-col h-full animate-in slide-in-from-right max-w-4xl relative">
-                <div className="flex items-center justify-between mb-8 pb-4 border-b border-brand-muted/10">
+                <div className="flex items-center justify-between mb-8 pb-4 shadow-[0_1px_0_0_rgba(255,255,255,0.03)]">
                     <div>
                         <button onClick={handleReset} className="flex items-center space-x-2 text-brand-muted hover:text-white transition-colors text-sm mb-2">
                             <ArrowLeft className="w-4 h-4" />
@@ -161,7 +161,7 @@ export const Practice: React.FC<{ onSolveProblem?: (problem: string) => void; la
                 </div>
 
                 <div className="flex-1">
-                    <div className="p-8 bg-brand-surface rounded-2xl border border-brand-muted/10 mb-8 shadow-xl shadow-black/20">
+                    <div className="p-8 bg-brand-surface rounded-2xl mb-8 shadow-xl shadow-black/25">
                         <h3 className="text-xl text-white font-medium leading-relaxed mb-8">{q.question}</h3>
 
                         <div className="grid grid-cols-1 gap-4">
@@ -171,12 +171,12 @@ export const Practice: React.FC<{ onSolveProblem?: (problem: string) => void; la
                                     <button
                                         key={i}
                                         onClick={() => handleAnswerSelect(opt)}
-                                        className={`flex items-center px-6 py-4 rounded-xl border text-left transition-all ${isSelected
-                                            ? 'bg-blue-600/20 border-blue-500 text-blue-50 shadow-[0_0_15px_rgba(59,130,246,0.15)] scale-[1.01]'
-                                            : 'bg-brand-background border-brand-muted/20 text-brand-text hover:border-brand-muted/40 hover:bg-brand-surface/80'
+                                        className={`flex items-center px-6 py-4 rounded-xl text-left transition-all ${isSelected
+                                            ? 'bg-blue-600/25 text-blue-50 shadow-[0_0_15px_rgba(59,130,246,0.1)] scale-[1.01]'
+                                            : 'bg-brand-background text-brand-text hover:bg-brand-surface/80'
                                             }`}
                                     >
-                                        <div className={`w-6 h-6 rounded-full border flex items-center justify-center mr-4 transition-colors ${isSelected ? 'border-blue-400 bg-blue-500/20' : 'border-brand-muted/40'}`}>
+                                        <div className={`w-6 h-6 rounded-full flex items-center justify-center mr-4 transition-colors ${isSelected ? 'bg-blue-500/20' : 'bg-brand-muted/10'}`}>
                                             {isSelected && <div className="w-2.5 h-2.5 rounded-full bg-blue-400" />}
                                         </div>
                                         <span className="text-base">{opt}</span>
@@ -187,7 +187,7 @@ export const Practice: React.FC<{ onSolveProblem?: (problem: string) => void; la
                     </div>
                 </div>
 
-                <div className="flex items-center justify-between mt-auto pt-6 border-t border-brand-muted/10">
+                <div className="flex items-center justify-between mt-auto pt-6 shadow-[0_-1px_0_0_rgba(255,255,255,0.03)]">
                     <button
                         onClick={() => setCurrentIndex(prev => Math.max(0, prev - 1))}
                         disabled={currentIndex === 0}
@@ -235,8 +235,8 @@ export const Practice: React.FC<{ onSolveProblem?: (problem: string) => void; la
                                     key={s.id}
                                     onClick={() => setSubject(s.id)}
                                     className={`flex items-center space-x-3 px-5 py-4 rounded-xl text-left transition-all duration-200 ${isActive
-                                        ? 'bg-blue-900/40 border border-blue-500/50 text-white shadow-[inset_0_1px_0_0_rgba(59,130,246,0.2)]'
-                                        : 'bg-brand-surface border border-brand-muted/10 text-brand-muted hover:bg-brand-surface/80 hover:text-white'
+                                        ? 'bg-blue-900/40 text-white shadow-lg'
+                                        : 'bg-brand-surface text-brand-muted hover:bg-brand-surface/80 hover:text-white'
                                         }`}
                                 >
                                     <Icon className={`w-5 h-5 ${isActive ? 'text-blue-400' : 'text-brand-muted'}`} />
@@ -255,8 +255,8 @@ export const Practice: React.FC<{ onSolveProblem?: (problem: string) => void; la
                                     key={d}
                                     onClick={() => setDifficulty(d)}
                                     className={`px-4 py-3 rounded-xl text-center transition-all duration-200 ${isActive
-                                        ? 'bg-blue-900/40 border border-blue-500/50 text-white shadow-[inset_0_1px_0_0_rgba(59,130,246,0.2)]'
-                                        : 'bg-brand-surface border border-brand-muted/10 text-brand-muted hover:bg-brand-surface/80 hover:text-white'
+                                        ? 'bg-blue-900/40 text-white shadow-lg'
+                                        : 'bg-brand-surface text-brand-muted hover:bg-brand-surface/80 hover:text-white'
                                         }`}
                                 >
                                     <span className="font-medium">{d}</span>
@@ -276,8 +276,8 @@ export const Practice: React.FC<{ onSolveProblem?: (problem: string) => void; la
                                     key={m.id}
                                     onClick={() => setMode(m.id)}
                                     className={`flex flex-col text-left px-5 py-4 rounded-xl transition-all duration-200 ${isActive
-                                        ? 'bg-blue-900/30 border border-blue-500/50 text-white shadow-[inset_0_1px_0_0_rgba(59,130,246,0.2)]'
-                                        : 'bg-brand-surface border border-brand-muted/10 text-brand-muted hover:bg-brand-surface/80 hover:text-white'
+                                        ? 'bg-blue-900/30 text-white shadow-lg'
+                                        : 'bg-brand-surface text-brand-muted hover:bg-brand-surface/80 hover:text-white'
                                         }`}
                                 >
                                     <span className="font-semibold text-sm mb-1">{m.label}</span>
@@ -287,7 +287,7 @@ export const Practice: React.FC<{ onSolveProblem?: (problem: string) => void; la
                         })}
                     </div>
 
-                    <div className="p-6 bg-blue-950/20 border border-blue-500/20 rounded-2xl text-center">
+                    <div className="p-6 bg-blue-950/20 rounded-2xl text-center">
                         <div className="w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
                             <Play className="w-5 h-5 text-blue-400 fill-blue-400 ml-1" />
                         </div>

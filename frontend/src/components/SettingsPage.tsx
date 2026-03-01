@@ -16,7 +16,7 @@ interface SettingsProps {
     setAccent: (accent: 'blue' | 'purple' | 'emerald' | 'orange') => void;
 }
 
-type Section = 'profile' | 'appearance' | 'notifications' | 'privacy' | 'learning';
+type Section = 'profile' | 'ai' | 'appearance' | 'notifications' | 'privacy' | 'learning';
 
 export const SettingsPage: React.FC<SettingsProps> = ({ user, onLogout, language: globalLanguage, onLanguageChange, theme, setTheme, accent, setAccent }) => {
     const t = translations[globalLanguage];
@@ -31,8 +31,9 @@ export const SettingsPage: React.FC<SettingsProps> = ({ user, onLogout, language
         setTimeout(() => setSaved(false), 2000);
     };
 
-    const sections: { id: Section; label: string; icon: any }[] = [
+    const sections: { id: Section | 'ai'; label: string; icon: any }[] = [
         { id: 'profile', label: 'Profile', icon: User },
+        { id: 'ai', label: 'AI Configuration', icon: Zap },
         { id: 'appearance', label: 'Appearance', icon: Palette },
         { id: 'learning', label: 'Learning Preferences', icon: BookOpen },
         { id: 'notifications', label: 'Notifications', icon: Bell },
@@ -61,16 +62,16 @@ export const SettingsPage: React.FC<SettingsProps> = ({ user, onLogout, language
             <div className="flex flex-col md:flex-row gap-6">
                 {/* ── Sidebar ── */}
                 <div className="md:w-56 shrink-0">
-                    <div className="bg-[#0f172a] border border-white/5 rounded-2xl p-2 space-y-1">
+                    <div className="bg-[#0f172a] rounded-2xl p-2 space-y-1 shadow-md">
                         {sections.map(s => {
                             const Icon = s.icon;
                             const active = activeSection === s.id;
                             return (
                                 <button
                                     key={s.id}
-                                    onClick={() => setActiveSection(s.id)}
+                                    onClick={() => setActiveSection(s.id as Section)}
                                     className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${active
-                                        ? 'bg-blue-600/20 border border-blue-500/30 text-blue-300'
+                                        ? 'bg-blue-600/20 text-blue-300'
                                         : 'text-slate-400 hover:text-white hover:bg-white/5'
                                         }`}
                                 >
@@ -84,7 +85,7 @@ export const SettingsPage: React.FC<SettingsProps> = ({ user, onLogout, language
                 </div>
 
                 {/* ── Content ── */}
-                <div className="flex-1 bg-[#0f172a] border border-white/5 rounded-2xl p-6 space-y-8">
+                <div className="flex-1 bg-[#0f172a] rounded-2xl p-6 space-y-8 shadow-sm">
 
                     {/* ─ Profile ─ */}
                     {activeSection === 'profile' && (
@@ -92,13 +93,13 @@ export const SettingsPage: React.FC<SettingsProps> = ({ user, onLogout, language
                             <SectionHeader title="Profile Information" desc="Update your name and account details." />
 
                             <div className="flex items-center space-x-4">
-                                <div className="w-16 h-16 rounded-2xl bg-blue-600/20 border-2 border-blue-500/30 flex items-center justify-center text-xl font-bold text-blue-300 shrink-0">
+                                <div className="w-16 h-16 rounded-2xl bg-blue-600/20 flex items-center justify-center text-xl font-bold text-blue-300 shrink-0">
                                     {initials}
                                 </div>
                                 <div>
                                     <p className="text-white font-semibold">{user?.name ?? 'Guest'}</p>
                                     <p className="text-slate-400 text-sm">{user?.email ?? 'guest@stem.local'}</p>
-                                    <span className="mt-1 inline-block text-[10px] font-bold bg-emerald-500/15 border border-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full uppercase tracking-wider">
+                                    <span className="mt-1 inline-block text-[10px] font-bold bg-emerald-500/15 text-emerald-400 px-2 py-0.5 rounded-full uppercase tracking-wider">
                                         Free Plan
                                     </span>
                                 </div>
@@ -111,13 +112,69 @@ export const SettingsPage: React.FC<SettingsProps> = ({ user, onLogout, language
                                 <Field label="Grade / Year" placeholder="e.g. Class 12" />
                             </div>
 
-                            <div className="flex items-center justify-between pt-4 border-t border-white/5">
+                            <div className="flex items-center justify-between pt-4 shadow-[0_-1px_0_0_rgba(255,255,255,0.03)]">
                                 <button
                                     onClick={onLogout}
-                                    className="px-4 py-2 text-red-400 border border-red-500/20 hover:bg-red-500/10 rounded-xl text-sm font-semibold transition-colors"
+                                    className="px-4 py-2 text-red-400 bg-red-500/10 hover:bg-red-500/20 rounded-xl text-sm font-semibold transition-colors"
                                 >
                                     Sign Out
                                 </button>
+                                <SaveButton saved={saved} onClick={handleSave} />
+                            </div>
+                        </div>
+                    )}
+
+                    {/* ─ AI Configuration ─ */}
+                    {activeSection === 'ai' && (
+                        <div className="space-y-6">
+                            <SectionHeader title="AI Engine Configuration" desc="Configure which AI model powers your STEM calculations." />
+
+                            <div>
+                                <label className="block text-xs text-slate-400 font-semibold uppercase tracking-wider mb-3">AI Provider</label>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <button
+                                        onClick={() => { localStorage.setItem('ai_provider', 'huggingface'); handleSave(); }}
+                                        className={`p-4 rounded-xl text-left transition-all ${localStorage.getItem('ai_provider') !== 'gemini'
+                                            ? 'bg-blue-600/15 shadow-[0_0_15px_rgba(59,130,246,0.1)]'
+                                            : 'hover:bg-white/5 text-slate-400'
+                                            }`}
+                                    >
+                                        <div className="flex items-center justify-between mb-2">
+                                            <span className="text-sm font-bold text-white">Hugging Face</span>
+                                            {localStorage.getItem('ai_provider') !== 'gemini' && <Check className="w-4 h-4 text-blue-400" />}
+                                        </div>
+                                        <p className="text-xs text-slate-400">Uses open-source models (Qwen/Mistral). No setup required.</p>
+                                    </button>
+
+                                    <button
+                                        onClick={() => { localStorage.setItem('ai_provider', 'gemini'); handleSave(); }}
+                                        className={`p-4 rounded-xl text-left transition-all ${localStorage.getItem('ai_provider') === 'gemini'
+                                            ? 'bg-purple-600/15 shadow-[0_0_15px_rgba(147,51,234,0.1)]'
+                                            : 'hover:bg-white/5 text-slate-400'
+                                            }`}
+                                    >
+                                        <div className="flex items-center justify-between mb-2">
+                                            <span className="text-sm font-bold text-white">Google Gemini</span>
+                                            {localStorage.getItem('ai_provider') === 'gemini' && <Check className="w-4 h-4 text-purple-400" />}
+                                        </div>
+                                        <p className="text-xs text-slate-400">Best speed & reasoning. Add your key to .env file in backend.</p>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div className="p-4 bg-blue-900/10 rounded-xl space-y-2">
+                                <h4 className="text-xs font-bold text-blue-300 uppercase tracking-widest flex items-center gap-2">
+                                    <Zap className="w-3.5 h-3.5" />
+                                    Engine Status
+                                </h4>
+                                <p className="text-[10px] text-slate-400">Default Model: <span className="font-mono text-blue-400">Qwen-2.5-7B</span></p>
+                                <div className="flex gap-2 mt-2">
+                                    <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-[10px] font-bold uppercase">Token Valid</span>
+                                    <span className="px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 text-[10px] font-bold uppercase">Ready</span>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center justify-end pt-4 border-t border-white/5">
                                 <SaveButton saved={saved} onClick={handleSave} />
                             </div>
                         </div>

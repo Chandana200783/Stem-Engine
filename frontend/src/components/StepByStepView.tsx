@@ -32,15 +32,15 @@ export const StepByStepView: React.FC<StepByStepViewProps> = ({ result, loading 
     if (loading) {
         return (
             <div className="space-y-6">
-                <div className="h-64 bg-slate-900/40 rounded-2xl border border-white/5 animate-pulse flex flex-col items-center justify-center space-y-4">
+                <div className="h-64 bg-slate-900/40 rounded-2xl animate-pulse flex flex-col items-center justify-center space-y-4 shadow-sm">
                     <div className="h-4 bg-white/5 rounded-full w-32"></div>
                     <div className="h-8 bg-white/10 rounded-lg w-64"></div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
-                    <div className="h-12 bg-slate-900/40 rounded-xl border border-white/5 animate-pulse"></div>
-                    <div className="h-12 bg-slate-900/40 rounded-xl border border-white/5 animate-pulse"></div>
+                    <div className="h-12 bg-slate-900/40 rounded-xl animate-pulse shadow-sm"></div>
+                    <div className="h-12 bg-slate-900/40 rounded-xl animate-pulse shadow-sm"></div>
                 </div>
-                <div className="h-96 bg-slate-900/40 rounded-2xl border border-white/5 animate-pulse p-8">
+                <div className="h-96 bg-slate-900/40 rounded-2xl animate-pulse p-8 shadow-sm">
                     <div className="h-4 bg-white/5 rounded-full w-24 mb-6"></div>
                     <div className="space-y-4">
                         <div className="h-3 bg-white/5 rounded-full w-full"></div>
@@ -56,14 +56,14 @@ export const StepByStepView: React.FC<StepByStepViewProps> = ({ result, loading 
 
     if (!result.success) {
         return (
-            <div className="p-6 bg-red-950/20 border border-red-500/30 rounded-2xl text-red-100/90 shadow-2xl">
+            <div className="p-6 bg-red-950/20 rounded-2xl text-red-100/90 shadow-2xl">
                 <div className="flex items-center space-x-3 mb-4">
                     <div className="p-2 bg-red-500/20 rounded-lg">
                         <Info className="w-5 h-5 text-red-400" />
                     </div>
                     <h3 className="text-lg font-bold text-red-300">Analysis Halted</h3>
                 </div>
-                <div className="p-4 bg-black/20 rounded-xl border border-red-500/10 font-mono text-sm leading-relaxed">
+                <div className="p-4 bg-black/20 rounded-xl shadow-inner font-mono text-sm leading-relaxed">
                     {result.error || 'The system could not process this request. Please verify the problem statement.'}
                 </div>
             </div>
@@ -75,8 +75,8 @@ export const StepByStepView: React.FC<StepByStepViewProps> = ({ result, loading 
 
             {/* ── Formula Used ── */}
             {result.formula_used && (
-                <div className="bg-[#0f172a]/80 backdrop-blur-xl border border-blue-500/10 rounded-2xl overflow-hidden shadow-2xl">
-                    <div className="px-6 py-4 bg-blue-500/5 border-b border-white/5 flex items-center space-x-2">
+                <div className="bg-[#0f172a]/80 backdrop-blur-xl rounded-2xl overflow-hidden shadow-2xl">
+                    <div className="px-6 py-4 bg-blue-500/5 shadow-[0_1px_0_0_rgba(255,255,255,0.03)] flex items-center space-x-2">
                         <Sigma className="w-4 h-4 text-blue-400" />
                         <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-400/80">Formula Used</h4>
                     </div>
@@ -87,14 +87,14 @@ export const StepByStepView: React.FC<StepByStepViewProps> = ({ result, loading 
 
                         {/* ── Variables Grid ── */}
                         {result.formula_variables && result.formula_variables.length > 0 && (
-                            <div className="mt-8 w-full border-t border-white/5 pt-8">
+                            <div className="mt-8 w-full shadow-[0_-1px_0_0_rgba(255,255,255,0.03)] pt-8">
                                 <div className="flex items-center space-x-2 mb-4">
                                     <Info className="w-3 h-3 text-brand-muted" />
                                     <span className="text-[10px] font-bold uppercase tracking-widest text-brand-muted">Variables</span>
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                     {result.formula_variables.map((v, i) => (
-                                        <div key={i} className="flex items-center space-x-3 px-4 py-3 bg-white/5 border border-white/5 rounded-xl hover:bg-white/[0.08] transition-colors group">
+                                        <div key={i} className="flex items-center space-x-3 px-4 py-3 bg-white/5 rounded-xl hover:bg-white/[0.08] transition-colors group shadow-sm">
                                             <span className="text-blue-400 font-bold font-serif whitespace-nowrap">{v.name}</span>
                                             <span className="text-white/20">=</span>
                                             <span className="text-sm text-brand-text/80 truncate group-hover:text-white transition-colors">{v.description} ({v.unit})</span>
